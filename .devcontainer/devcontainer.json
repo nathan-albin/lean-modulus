@@ -9,7 +9,17 @@
 	},
 	"features": {
 		"ghcr.io/devcontainers/features/git-lfs:1": {}
-	}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"leanprover.lean4"
+			]
+		}
+	},
+
+	// ensure Mathlib cache is up to date
+	"postCreateCommand": "lake exe cache get"
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
