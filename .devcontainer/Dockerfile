@@ -2,6 +2,15 @@ FROM mcr.microsoft.com/devcontainers/base:trixie
 
 # System dependencies for leanblueprint (pygraphviz needs the graphviz headers
 # and a compiler; plasTeX/leanblueprint itself just needs Python + pipx).
+# texlive-binaries + texlive-base provide `kpsewhich`, which plasTeX's `\input`
+# shells out to in order to resolve every \input{...} (including our own
+# macros/common.tex and macros/web.tex). Without it, `\input` silently fails
+# ("File not found", swallowed as a warning, not an error) and every
+# \newtheorem-defined environment (theorem, definition, ...) falls back to an
+# unrecognized-macro stub -- which crashes `leanblueprint web`/`checkdecls`
+# with "TypeError: unhashable type: ..." as soon as the blueprint actually
+# uses one. This does NOT yet cover `leanblueprint pdf` (needs xelatex, i.e.
+# a much larger texlive install) -- only the web build / checkdecls path.
 RUN apt-get update && apt-get install -y --no-install-recommends \
         python3 \
         python3-pip \
@@ -10,6 +19,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libgraphviz-dev \
         pkg-config \
         build-essential \
+        texlive-binaries \
+        texlive-base \
     && rm -rf /var/lib/apt/lists/*
 
 # Switch to Codespace user
