@@ -1,13 +1,9 @@
 name = "lean-modulus"
 version = "0.1.0"
-defaultTargets = ["lean-modulus"]
+defaultTargets = ["LeanModulus"]
 
 [[lean_lib]]
 name = "LeanModulus"
-
-[[lean_exe]]
-name = "lean-modulus"
-root = "Main"
 
 [[require]]
 name = "mathlib"

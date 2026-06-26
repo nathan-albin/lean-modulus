@@ -1,0 +1,4 @@
+-- Shared graph-theoretic infrastructure reused across papers (e.g. multigraphs,
+-- usage matrices) that isn't already in Mathlib.
+--
+-- placeholder: nothing here yet
