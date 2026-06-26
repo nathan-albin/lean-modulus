@@ -1,3 +1,3 @@
--- This module serves as the root of the `LeanModulus` library.
--- Import modules here that should be built as part of the library.
 import LeanModulus.Basic
+import LeanModulus.Common.Multigraph
+import LeanModulus.Papers.FairestEdgeUsage.Defs
