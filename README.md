@@ -10,7 +10,7 @@ This is a working project. results are added incrementally, and the
 
 | Paper | Status | Lean source |
 |---|---|---|
-| [Fairest Edge Usage and Minimum Expected Overlap for Random Spanning Trees](https://arxiv.org/abs/1805.10112) (Albin, Clemens, Hoare, Poggi-Corradini, Sit, Tymochko, 2021) | 🚧 just started | [`LeanModulus/Papers/FairestEdgeUsage`](LeanModulus/Papers/FairestEdgeUsage) |
+| [Fairest Edge Usage and Minimum Expected Overlap for Random Spanning Trees](https://doi.org/10.1016/j.disc.2020.112282) (Albin, Clemens, Hoare, Poggi-Corradini, Sit, Tymochko, 2021) | 🚧 just started | [`LeanModulus/Papers/FairestEdgeUsage`](LeanModulus/Papers/FairestEdgeUsage) |
 
 More papers will be added here as they're formalized.
 
