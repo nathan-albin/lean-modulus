@@ -26,5 +26,8 @@ RUN curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -s -- --default-toolc
 ENV PATH="/home/vscode/.elan/bin:/home/vscode/.local/bin:${PATH}"
 
 # Install leanblueprint (builds the web/PDF blueprint and checks that Lean
-# declarations named in the blueprint actually exist).
-RUN pipx install leanblueprint
+# declarations named in the blueprint actually exist). --include-deps is
+# required so that plastex (a dependency, not the package itself) also gets
+# linked onto PATH -- without it, `leanblueprint web`/`checkdecls` fail with
+# "plastex: not found".
+RUN pipx install leanblueprint --include-deps
