@@ -47,8 +47,8 @@ and choose "Reopen in Container," or use GitHub Codespaces.
 
 This project uses [leanblueprint](https://github.com/PatrickMassot/leanblueprint) to maintain a
 human-readable correspondence between the paper's statements and the Lean formalization, with a
-dependency graph and a live count of completed vs. `sorry`-proved results. Once published, it will
-be browsable at `https://nathan-albin.com/lean-modulus/blueprint/`.
+dependency graph and a live count of completed vs. `sorry`-proved results. It is
+browsable at [https://nathan-albin.com/lean-modulus/blueprint/](https://nathan-albin.com/lean-modulus/blueprint/).
 
 ## Why formalize this
 
