@@ -144,7 +144,73 @@ theorem IsForest.ncard_add_numComponents {F : Set E} (hF : G.IsForest F) (hFfin 
                 (G.toSimpleGraph (insert a s)).connectedComponentMk x := by
               intro x
               simp [ψ, SimpleGraph.ConnectedComponent.lift_mk]
-            sorry
+            classical
+            set ρ : (G.toSimpleGraph s).ConnectedComponent → (G.toSimpleGraph s).ConnectedComponent :=
+              fun c => if c = (G.toSimpleGraph s).connectedComponentMk v then
+                (G.toSimpleGraph s).connectedComponentMk u else c with hρ_def
+            have hR : ∀ x y, (G.toSimpleGraph (insert a s)).Reachable x y →
+                ρ ((G.toSimpleGraph s).connectedComponentMk x) =
+                  ρ ((G.toSimpleGraph s).connectedComponentMk y) := by
+              apply SimpleGraph.reachable_le_of_adj_le
+              · intro x; rfl
+              · intro x y z hxy hyz; exact hxy.trans hyz
+              · intro x y hxy
+                rw [Multigraph.toSimpleGraph, SimpleGraph.fromEdgeSet_adj] at hxy
+                obtain ⟨hxy1, hxyne⟩ := hxy
+                rw [Set.image_insert_eq, Set.mem_insert_iff] at hxy1
+                rcases hxy1 with h | h
+                · rw [huv, Sym2.eq_iff] at h
+                  rcases h with ⟨hxu, hyv⟩ | ⟨hxv, hyu⟩
+                  · subst hxu; subst hyv
+                    simp [ρ]
+                  · subst hxv; subst hyu
+                    simp [ρ]
+                · have hadjxy : (G.toSimpleGraph s).Adj x y := by
+                    rw [Multigraph.toSimpleGraph, SimpleGraph.fromEdgeSet_adj]
+                    exact ⟨h, hxyne⟩
+                  exact congrArg ρ (SimpleGraph.ConnectedComponent.sound hadjxy.reachable)
+            have hψuv : ψ ((G.toSimpleGraph s).connectedComponentMk u) =
+                ψ ((G.toSimpleGraph s).connectedComponentMk v) := by
+              rw [hψ, hψ]
+              exact SimpleGraph.ConnectedComponent.sound hadj.reachable
+            have hUmem : (G.toSimpleGraph s).connectedComponentMk u ∈
+                (G.toSimpleGraph s).connectedComponentMk '' S := Set.mem_image_of_mem _ huS
+            have hVmem : (G.toSimpleGraph s).connectedComponentMk v ∈
+                (G.toSimpleGraph s).connectedComponentMk '' S := Set.mem_image_of_mem _ hvS
+            have hUVmem : (G.toSimpleGraph s).connectedComponentMk u ∈
+                ((G.toSimpleGraph s).connectedComponentMk '' S) \
+                  {(G.toSimpleGraph s).connectedComponentMk v} := ⟨hUmem, hcomp⟩
+            have himgeq : ψ '' ((G.toSimpleGraph s).connectedComponentMk '' S) =
+                ψ '' (((G.toSimpleGraph s).connectedComponentMk '' S) \
+                  {(G.toSimpleGraph s).connectedComponentMk v}) := by
+              apply Set.Subset.antisymm
+              · rintro _ ⟨c, hc, rfl⟩
+                by_cases hcv : c = (G.toSimpleGraph s).connectedComponentMk v
+                · subst hcv
+                  exact ⟨_, hUVmem, hψuv⟩
+                · exact ⟨c, ⟨hc, hcv⟩, rfl⟩
+              · exact Set.image_mono Set.sdiff_subset
+            have hinj : Set.InjOn ψ (((G.toSimpleGraph s).connectedComponentMk '' S) \
+                {(G.toSimpleGraph s).connectedComponentMk v}) := by
+              rintro c ⟨hc, hcv⟩ d ⟨hd, hdv⟩ hcd
+              obtain ⟨x, hxS, rfl⟩ := hc
+              obtain ⟨y, hyS, rfl⟩ := hd
+              have hreach : (G.toSimpleGraph (insert a s)).Reachable x y := by
+                rw [← SimpleGraph.ConnectedComponent.eq, ← hψ, ← hψ]
+                exact hcd
+              have hRxy := hR x y hreach
+              rw [Set.mem_singleton_iff, SimpleGraph.ConnectedComponent.eq] at hcv hdv
+              simpa [ρ, hcv, hdv] using hRxy
+            have himg : ψ '' ((G.toSimpleGraph s).connectedComponentMk '' S) =
+                (G.toSimpleGraph (insert a s)).connectedComponentMk '' S := by
+              rw [Set.image_image]
+              exact Set.image_congr (fun x _ => hψ x)
+            have hcard : ((G.toSimpleGraph s).connectedComponentMk '' S).ncard =
+                (ψ '' ((G.toSimpleGraph s).connectedComponentMk '' S)).ncard + 1 := by
+              rw [himgeq, hinj.ncard_image]
+              exact (Set.ncard_sdiff_singleton_add_one hVmem (hS.image _)).symm
+            rw [Multigraph.numComponents, Multigraph.numComponents, ← himg]
+            exact hcard
           rw [Set.ncard_insert_of_notMem ha hs]
           omega
       exact main F hFfin hF hFS
