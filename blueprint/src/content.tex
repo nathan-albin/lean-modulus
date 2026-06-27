@@ -16,13 +16,15 @@ Following the paragraph preceding Section 1.1 of the paper: throughout, $G = (V,
 finite, connected multigraph with vertex set $V$ and edge set $E$. Parallel edges are allowed;
 self-loops are not.
 
-In the formalization, a multigraph on vertex type $V$ and edge type $E$ consists of a map
-$\mathrm{endpoints} \colon E \to \operatorname{Sym}^2(V)$ assigning to each edge its (unordered)
-pair of endpoints. Edges are first-class objects, so parallel edges are simply distinct elements
-of $E$ with the same image under $\mathrm{endpoints}$. Finiteness, connectedness, and the absence
-of self-loops are not built into the type itself --- they are standing hypotheses carried
-explicitly wherever the paper's results need them, matching the paper's ``throughout this paper''
-convention rather than baking it into every multigraph.
+To formalize this, a multigraph on vertex type $V$ and edge type $E$ consists of
+a map $\mathrm{endpoints} \colon E \to \operatorname{Sym}^2(V)$ assigning to
+each edge its (unordered) pair of endpoints. By making the edges a separate type
+(rather than a relation on $V$ or a subset of unordered pairs of vertices), we
+implicilty allow parallel edges. They are  simply distinct elements of $E$ with
+the same image under $\mathrm{endpoints}$. Finiteness, connectedness, and the
+absence of self-loops are not built into the type itself. Instead, they are
+added explicitly wherever the paper's results need them, matching the
+``throughout this paper'' statement.
 \end{definition}
 
 \begin{definition}[Spanning tree]
@@ -30,11 +32,12 @@ convention rather than baking it into every multigraph.
 \uses{def:multigraph}
 \lean{Multigraph.IsSpanningTree}
 \leanok
-A set of edges $T \subseteq E$ is a \emph{spanning tree} of $G$ if it touches every vertex of $V$
-and contains no cycle (allowing for the fact that, in a multigraph, two parallel edges between the
-same pair of vertices already form a $2$-cycle).
+A set of edges $T \subseteq E$ is a \emph{spanning tree} of $G$ if it touches
+every vertex of $V$ and contains no cycle. In particular, this immediately rules
+out parallel edges, which would form a 2-cycle.
 
-In the formalization this is \texttt{Multigraph.IsSpanningTree}: $T$ is acyclic (no loops, no
-parallel edges within $T$, and the simple graph obtained by forgetting edge identities is acyclic)
-and that same simple graph is connected, i.e.\ touches and joins every vertex of $V$.
+This is formalized in \texttt{Multigraph.IsSpanningTree}: $T$ is acyclic (no
+loops, no parallel edges within $T$, and the simple graph obtained by forgetting
+edge identities is acyclic) and that same simple graph is connected, i.e.\
+touches and joins every vertex of $V$.
 \end{definition}
