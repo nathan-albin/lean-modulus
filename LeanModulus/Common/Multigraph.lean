@@ -36,11 +36,48 @@ simple graph is connected, i.e. it touches and joins every vertex of `V`. -/
 def IsSpanningTree (T : Set E) : Prop :=
   G.IsForest T ∧ (G.toSimpleGraph T).Connected
 
+/-- If `F` is a forest and `F'` is a subset of `F`, then `F'` is also a forest. -/
 theorem IsForest.subset {F F' : Set E} (hF : G.IsForest F) (h : F' ⊆ F) :
     G.IsForest F' := by
   obtain ⟨hloop, hinj, hacyc⟩ := hF
   refine ⟨fun e he => hloop e (h he), hinj.mono h, ?_⟩
   exact hacyc.anti (SimpleGraph.fromEdgeSet_mono (Set.image_mono h))
+
+/-- If `F` is a forest and `e={u,v}` is an edge not in `F` with the property
+that `u` and `v` are not reachable in the graph induced by `F`, then `F ∪ {e}` is also a forest. -/
+theorem IsForest.insert_of_not_reachable {F : Set E} (hF : G.IsForest F) {e : E} {u v : V}
+    (heF : e ∉ F) (huv : G.endpoints e = s(u, v)) (hne : u ≠ v)
+    (hreach : ¬ (G.toSimpleGraph F).Reachable u v) :
+    G.IsForest (insert e F) := by
+    obtain ⟨hloop, hinj, hacyc⟩ := hF
+    have hloop' : ∀ e' ∈ insert e F, ¬ (G.endpoints e').IsDiag := by
+      intro e' he'
+      cases he' with
+      | inl h =>
+        rw [h, huv]
+        exact Not.imp hne fun a => a
+      | inr h =>
+        exact Not.imp (hloop e' h) fun a => a
+    have hinj' : Set.InjOn G.endpoints (insert e F) := by
+      apply (Set.injOn_insert heF).mpr
+      refine ⟨hinj, ?_⟩
+      intro he'
+      obtain ⟨b, hbF, hbe⟩ := he'
+      rw [huv] at hbe
+      have hadj : (G.toSimpleGraph F).Adj u v := by
+        rw [Multigraph.toSimpleGraph, SimpleGraph.fromEdgeSet_adj]
+        refine ⟨?_, hne⟩
+        rw [← hbe]
+        exact Set.mem_image_of_mem G.endpoints hbF
+      exact hreach hadj.reachable
+    have hacyc' : (G.toSimpleGraph (insert e F)).IsAcyclic := by
+      have hsup : G.toSimpleGraph (insert e F) = G.toSimpleGraph F ⊔ SimpleGraph.edge u v := by
+        rw [Multigraph.toSimpleGraph, Multigraph.toSimpleGraph, Set.image_insert_eq]
+        rw [huv, Set.insert_eq, SimpleGraph.fromEdgeSet_union]
+        exact sup_comm (SimpleGraph.fromEdgeSet {s(u, v)}) (SimpleGraph.fromEdgeSet (G.endpoints '' F))
+      rw [hsup]
+      exact SimpleGraph.IsAcyclic.sup_edge_of_not_reachable hreach hacyc
+    refine ⟨hloop', hinj', hacyc'⟩
 
 /-- The number of connected components of the simple graph on edge set `F` that meet
 the vertex set `S`. Counted as the number of distinct `ConnectedComponent`s hit by `S`,
