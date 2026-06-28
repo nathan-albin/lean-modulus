@@ -18,3 +18,10 @@ GitHub Codespaces) — it installs Lean/elan, fetches the Mathlib cache, and ins
 3. Match the paper's definition/theorem numbering in docstrings (see existing files under
    `LeanModulus/Papers/` for the convention).
 4. Open a PR. CI runs `lake build` and rebuilds the blueprint.
+
+If you've added a new Lean file, make sure it is included by `LeanModulus.lean`. The following bash command can help check for missing imports. An empty result means all files are included. Run it from the repo root.
+```bash
+comm -3 \
+  <(find LeanModulus -name "*.lean" | sed 's#^LeanModulus/##; s#\.lean$##; s#/#.#g; s/^/LeanModulus./' | sort) \
+  <(grep -oP '^import \S+' LeanModulus.lean | sed 's/^import //' | sort)
+```
