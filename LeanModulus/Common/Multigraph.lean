@@ -23,6 +23,24 @@ joined by some edge in `F`. -/
 def toSimpleGraph (F : Set E) : SimpleGraph V :=
   SimpleGraph.fromEdgeSet (G.endpoints '' F)
 
+/-- If `F` is a finite set of edges, then the support of the simple graph on `F` is finite. -/
+theorem toSimpleGraph_support_finite {F : Set E} (hF : F.Finite) :
+    (G.toSimpleGraph F).support.Finite := by
+  have hfin : (⋃ z ∈ G.endpoints '' F, {x | x ∈ z}).Finite := by
+    apply Set.Finite.biUnion (hF.image G.endpoints)
+    intro z _
+    induction z using Sym2.ind with
+    | _ a b =>
+      exact Set.Finite.subset (Set.finite_insert.mpr (Set.finite_singleton b))
+        (fun x hx => Sym2.mem_iff.mp hx)
+  apply hfin.subset
+  intro v hv
+  rw [SimpleGraph.mem_support] at hv
+  obtain ⟨w, hadj⟩ := hv
+  rw [Multigraph.toSimpleGraph, SimpleGraph.fromEdgeSet_adj] at hadj
+  obtain ⟨hmem, _⟩ := hadj
+  exact Set.mem_biUnion hmem (Sym2.mem_mk_left v w)
+
 /-- A set of edges `F` is a forest if it has no loops, no two edges of `F`
 share the same endpoints (parallel edges would form a 2-cycle), and the
 underlying simple graph on `F` is acyclic. -/
