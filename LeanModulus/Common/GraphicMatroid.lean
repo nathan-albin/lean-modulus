@@ -13,7 +13,7 @@ variable {V E : Type*} [Finite E] (G : Multigraph V E)
 private theorem indep_aug {I J : Set E} (hI : G.IsForest I) (hJ : G.IsForest J)
     (hcard : I.ncard < J.ncard) : ∃ e ∈ J, e ∉ I ∧ G.IsForest (insert e I) := by
   by_contra h
-  push_neg at h
+  push Not at h
   have hreach : ∀ u v : V, (G.toSimpleGraph J).Reachable u v → (G.toSimpleGraph I).Reachable u v := by
     intro u v hreach
     refine SimpleGraph.reachable_le_of_adj_le ?_ ?_ ?_ u v hreach
