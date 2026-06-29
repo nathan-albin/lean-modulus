@@ -23,3 +23,50 @@ div.corollary_thmcontent {
 div.proof_content {
 	border-left: .08rem solid grey;
 }
+
+/* Shape/color swatches for the dependency graph legend (see
+ * macros/dep_graph.html, which overrides leanblueprint's default legend
+ * template to show these instead of describing shapes/colors by name). */
+.legend-swatch {
+	display: inline-block;
+	width: 0.9rem;
+	height: 0.9rem;
+	margin-top: 0.2rem;
+	vertical-align: middle;
+	border: 0.15rem solid black;
+	background-color: white;
+}
+
+.legend-shape-box {
+	border-radius: 0;
+}
+
+.legend-shape-ellipse {
+	border-radius: 50%;
+}
+
+/* leanblueprint's dep_graph.css leaves dt/dd at their default display
+ * (dt: block, dd: inline), and only dd's display is overridden (to
+ * inline) -- with dt still block, dt always forces a line break before dd,
+ * stranding the icon alone on its own line. Making dt inline-block instead
+ * fixed that, but introduced two new problems: with nothing left to force a
+ * break *between* entries, every dt/dd pair ran together as one paragraph;
+ * and dt/dd at different display types don't share a baseline, so the
+ * swatch and its text don't sit on the same visual center.
+ *
+ * Floating dt (clear: left) instead sidesteps both: each entry's icon
+ * anchors to the left margin, dd's matching margin-left clears the float so
+ * its text starts right beside the icon on the first line and wraps below
+ * it on later lines, and clear: left pushes the next icon below the
+ * previous entry's full height -- giving one self-contained, line-broken
+ * row per entry without needing dt and dd to share a single line box. */
+#Legend dt {
+	float: left;
+	clear: left;
+	margin: 0 0.4rem 0.6rem 0;
+}
+
+#Legend dd {
+	display: block;
+	margin: 0 0 0.6rem 1.6rem;
+}
