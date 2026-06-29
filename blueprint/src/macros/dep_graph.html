@@ -84,6 +84,21 @@
         'Green background': 'border-color: #9CEC8B; background-color: #9CEC8B;',
         'Blue background': 'border-color: #A3D6FF; background-color: #A3D6FF;',
       } %}
+      {#
+        Our own shorter wording for these entries, in place of
+        leanblueprint's full-sentence descriptions -- still keyed on the
+        upstream label so a renamed/removed entry just falls back to
+        skipping the swatch rather than showing stale text.
+      #}
+      {% set descriptions = {
+        'Dark green border': 'in Mathlib',
+        'Green border': 'statement formalized',
+        'Blue border': 'statement ready to formalize',
+        'Orange border': 'statement not ready',
+        'Dark green background': 'proof complete, including dependencies',
+        'Green background': 'proof formalized',
+        'Blue background': 'proof ready to formalize',
+      } %}
       {% for k in ['Boxes', 'Ellipses'] %}
       {% if k in legend_map %}
       <dt><span class="legend-swatch {{ shape_classes[k] }}" title="{{ k }}"></span></dt><dd>{{ legend_map[k] }}</dd>
@@ -91,7 +106,7 @@
       {% endfor %}
       {% for k in ['Dark green border', 'Green border', 'Blue border', 'Orange border', 'Dark green background', 'Green background', 'Blue background'] %}
       {% if k in legend_map %}
-      <dt><span class="legend-swatch" style="{{ swatch_styles[k] }}" title="{{ k }}"></span></dt><dd>{{ legend_map[k] }}</dd>
+      <dt><span class="legend-swatch" style="{{ swatch_styles[k] }}" title="{{ k }}"></span></dt><dd>{{ descriptions[k] }}</dd>
       {% endif %}
       {% endfor %}
     </dl>
