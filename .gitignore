@@ -12,3 +12,8 @@ tmp
 /home_page/.jekyll-cache/
 /home_page/.jekyll-metadata
 /home_page/vendor/
+
+# Local copy of the built blueprint, so the homepage's embedded dependency graph
+# resolves when previewing with `bundle exec jekyll serve` (see CONTRIBUTING.md).
+# CI assembles the equivalent copy itself; Jekyll won't follow a symlink here.
+/home_page/blueprint/

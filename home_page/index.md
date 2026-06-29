@@ -6,10 +6,36 @@
 usemathjax: true
 ---
 
-Useful links:
+Formalizations, in [Lean 4](https://lean-lang.org/) and [Mathlib](https://leanprover-community.github.io/mathlib4_docs/),
+of results from research on graphs, networks, and the modulus of families of objects. This is a
+working project — results are added incrementally, and the [blueprint](blueprint/) below tracks
+what's genuinely proved versus stated with `sorry`.
+
+## Papers
+
+| Paper | Status | Lean source |
+|---|---|---|
+| [Fairest Edge Usage and Minimum Expected Overlap for Random Spanning Trees](https://doi.org/10.1016/j.disc.2020.112282) (Albin, Clemens, Hoare, Poggi-Corradini, Sit, Tymochko, 2021) | 🚧 just started | [`LeanModulus/Papers/FairestEdgeUsage`]({{ site.github.repository_url }}/tree/main/LeanModulus/Papers/FairestEdgeUsage) |
+
+More papers will be added here as they're formalized.
+
+## Dependency graph
+
+Each node below is a definition or theorem from the blueprint; colors show what's formalized,
+what's ready to formalize next, and what's still blocked. See the
+[full-page version]({{ site.url }}/blueprint/dep_graph_document.html) for the legend and
+search/filter controls.
+
+<iframe src="{{ site.url }}/blueprint/dep_graph_document.html" width="100%" height="600" style="border: 1px solid #ddd; border-radius: 6px;"></iframe>
+
+## Resources
 
 * [Zulip chat for Lean](https://leanprover.zulipchat.com/) for coordination
-* [Blueprint]({{ site.url }}/blueprint/)
-* [Blueprint as pdf]({{ site.url }}/blueprint.pdf)
-* [Dependency graph]({{ site.url }}/blueprint/dep_graph_document.html)
-* [Doc pages for this repository]({{ site.url }}/docs/)
+* [Design notes]({{ site.github.repository_url }}/tree/main/docs) — encoding choices, deviations from the paper, open TODOs
+
+## Why formalize this
+
+I'm moving toward including Lean theorem proving in my courses and my research workflow.
+Formalizing results from my recent papers is a way for me to practice writing Lean proofs for real
+mathematical content rather than textbook exercises. It also gives me a chance to explore the
+various AI tools for Lean, and to see how well they can help with real research-level mathematics.

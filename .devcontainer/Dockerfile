@@ -23,6 +23,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         texlive-base \
     && rm -rf /var/lib/apt/lists/*
 
+# Ruby for the home_page/ Jekyll site (the GitHub Pages homepage), so it can be
+# previewed locally instead of waiting on CI. ruby-full pulls in a usable
+# gem/irb toolchain; the -dev headers cover native gems (e.g. nokogiri) on
+# platforms where github-pages's pinned version has no prebuilt binary.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ruby-full \
+        zlib1g-dev \
+        libxml2-dev \
+        libxslt1-dev \
+        libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 # Switch to Codespace user
 USER vscode
 WORKDIR /home/vscode
@@ -42,3 +54,10 @@ ENV PATH="/home/vscode/.elan/bin:/home/vscode/.local/bin:${PATH}"
 # linked onto PATH -- without it, `leanblueprint web`/`checkdecls` fail with
 # "plastex: not found".
 RUN pipx install leanblueprint --include-deps
+
+# Redirect gem installs to a directory owned by vscode (the apt-installed Ruby's
+# default GEM_HOME is root-owned) and install Bundler, which home_page/Gemfile.lock
+# needs to pin and install the exact `github-pages` gem version GitHub Pages builds with.
+ENV GEM_HOME="/home/vscode/gems"
+ENV PATH="/home/vscode/gems/bin:${PATH}"
+RUN gem install bundler

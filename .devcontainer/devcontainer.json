@@ -18,8 +18,8 @@
 		}
 	},
 
-	// ensure Mathlib cache is up to date
-	"postCreateCommand": "lake exe cache get"
+	// ensure Mathlib cache is up to date, and install Jekyll gems for previewing home_page/ locally
+	"postCreateCommand": "lake exe cache get && (cd home_page && bundle install)"
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
