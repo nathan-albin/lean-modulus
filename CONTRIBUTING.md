@@ -41,6 +41,12 @@ Both are normally only built by CI, but you can check changes locally before pus
 leanblueprint web      # regenerates blueprint/web/ from the .tex sources
 leanblueprint serve    # serves it at http://localhost:8000
 ```
+`leanblueprint web` goes through plasTeX, not a real TeX engine, so it tolerates LaTeX errors (e.g.
+a typo'd macro) that will still break CI, which also compiles a PDF with `latexmk`/`xelatex`. Run
+that too before pushing — the devcontainer installs the same engine CI uses:
+```bash
+leanblueprint pdf      # compiles blueprint/print/print.pdf with xelatex
+```
 
 **Homepage** (`home_page/`, the Jekyll site deployed to the project's GitHub Pages URL). Run from
 the repo root:

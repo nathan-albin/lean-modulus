@@ -9,8 +9,14 @@ FROM mcr.microsoft.com/devcontainers/base:trixie
 # \newtheorem-defined environment (theorem, definition, ...) falls back to an
 # unrecognized-macro stub -- which crashes `leanblueprint web`/`checkdecls`
 # with "TypeError: unhashable type: ..." as soon as the blueprint actually
-# uses one. This does NOT yet cover `leanblueprint pdf` (needs xelatex, i.e.
-# a much larger texlive install) -- only the web build / checkdecls path.
+# uses one.
+#
+# texlive-xetex + texlive-latex-extra + texlive-fonts-recommended + latexmk
+# give `leanblueprint pdf` a real xelatex (the engine blueprint/src/print.tex
+# requires) instead of just plasTeX's lenient web build, so a typo'd macro
+# (undefined control sequence, missing \label, etc.) that plasTeX silently
+# swallows still gets caught locally instead of only surfacing 20 minutes
+# into CI's "Compile blueprint" job.
 RUN apt-get update && apt-get install -y --no-install-recommends \
         python3 \
         python3-pip \
@@ -21,6 +27,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         texlive-binaries \
         texlive-base \
+        texlive-xetex \
+        texlive-latex-extra \
+        texlive-fonts-recommended \
+        latexmk \
     && rm -rf /var/lib/apt/lists/*
 
 # Ruby for the home_page/ Jekyll site (the GitHub Pages homepage), so it can be
