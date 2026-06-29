@@ -2,42 +2,8 @@
 % It will be used both by the web and the print version.
 % It should *not* include the \begin{document}
 %
-% If you want to split the blueprint content into several files then
-% the current file can be a simple sequence of \input. Otherwise It
-% can start with a \section or \chapter for instance.
+% Content is split one file per chapter: \input{common} for material shared
+% across papers, then one \input per paper as they're added.
 
-\section{Setup}
-
-\begin{definition}[Multigraph]
-\label{def:multigraph}
-\lean{Multigraph}
-\leanok
-Following the paragraph preceding Section 1.1 of the paper: throughout, $G = (V, E)$ denotes a
-finite, connected multigraph with vertex set $V$ and edge set $E$. Parallel edges are allowed;
-self-loops are not.
-
-To formalize this, a multigraph on vertex type $V$ and edge type $E$ consists of
-a map $\mathrm{endpoints} \colon E \to \operatorname{Sym}^2(V)$ assigning to
-each edge its (unordered) pair of endpoints. By making the edges a separate type
-(rather than a relation on $V$ or a subset of unordered pairs of vertices), we
-implicilty allow parallel edges. They are  simply distinct elements of $E$ with
-the same image under $\mathrm{endpoints}$. Finiteness, connectedness, and the
-absence of self-loops are not built into the type itself. Instead, they are
-added explicitly wherever the paper's results need them, matching the
-``throughout this paper'' statement.
-\end{definition}
-
-\begin{definition}[Spanning tree]
-\label{def:spanning-tree}
-\uses{def:multigraph}
-\lean{Multigraph.IsSpanningTree}
-\leanok
-A set of edges $T \subseteq E$ is a \emph{spanning tree} of $G$ if it touches
-every vertex of $V$ and contains no cycle. In particular, this immediately rules
-out parallel edges, which would form a 2-cycle.
-
-This is formalized in \texttt{Multigraph.IsSpanningTree}: $T$ is acyclic (no
-loops, no parallel edges within $T$, and the simple graph obtained by forgetting
-edge identities is acyclic) and that same simple graph is connected, i.e.\
-touches and joins every vertex of $V$.
-\end{definition}
+\input{common}
+\input{fairest_edge_usage}

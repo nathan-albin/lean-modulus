@@ -1,0 +1,133 @@
+\chapter{Fairest Edge Usage and Minimum Expected Overlap for Random Spanning Trees}
+\label{chap:feu}
+
+This chapter formalizes results from \feupaperref{}. It specializes the general
+modulus theory of Chapter~\ref{chap:common} to spanning trees, and develops the
+paper's two main optimization problems: minimum expected overlap (MEO) and
+fairest edge usage (FEU).
+
+\section{Random spanning trees, MEO, and FEU}
+
+This section follows Sections 1.1--1.3 of the paper: it sets up random spanning
+trees and states the two optimization problems, minimum expected overlap
+(MEO) and fairest edge usage (FEU), whose relationship to spanning tree
+modulus is the subject of the rest of the paper.
+
+\begin{definition}[Law of a random spanning tree]
+\label{def:spanning-tree-law}
+\uses{def:spanning-tree}
+Let $G = (V, E)$ be a finite, connected multigraph and let $\Gamma_G$ be its
+(finite) set of spanning trees. A \emph{law} on $\Gamma_G$ is a probability
+mass function $\mu \colon \Gamma_G \to [0,1]$ with $\sum_{\gamma \in \Gamma_G}
+\mu(\gamma) = 1$; we write $\mu \in P(\Gamma_G)$. A random spanning tree
+$\underline\gamma$ \emph{has law} $\mu$ (written $\underline\gamma \sim \mu$)
+if $\mathbb P_\mu(\underline\gamma = \gamma) = \mu(\gamma)$ for every $\gamma
+\in \Gamma_G$.
+\end{definition}
+
+\begin{definition}[Minimum expected overlap problem]
+\label{def:meo}
+\uses{def:spanning-tree-law}
+For $\mu \in P(\Gamma_G)$, let $\underline\gamma, \underline\gamma' \sim \mu$
+be independent. The \emph{expected overlap} of $\mu$ is
+\[
+  \mathbb E_\mu |\underline\gamma \cap \underline\gamma'|
+  := \sum_{\gamma, \gamma' \in \Gamma_G} |\gamma \cap \gamma'| \, \mu(\gamma) \mu(\gamma').
+\]
+The \emph{minimum expected overlap (MEO) problem} is
+\[
+  \MEO(\Gamma_G) := \min_{\mu \in P(\Gamma_G)} \mathbb E_\mu |\underline\gamma \cap \underline\gamma'|.
+\]
+A law achieving this minimum is \emph{optimal} for $\MEO(\Gamma_G)$.
+\end{definition}
+
+\begin{definition}[Edge usage probability]
+\label{def:edge-usage-probability}
+\uses{def:spanning-tree-law}
+For $\mu \in P(\Gamma_G)$ and $e \in E$, the \emph{edge usage probability} of
+$e$ under $\mu$ is
+\[
+  \mathbb P_\mu(e \in \underline\gamma) := \sum_{\gamma \in \Gamma_G} \mathbf 1_{\{e \in \gamma\}} \, \mu(\gamma).
+\]
+\end{definition}
+
+\begin{definition}[Fairest edge usage problem]
+\label{def:feu}
+\uses{def:edge-usage-probability}
+The \emph{fairest edge usage (FEU) problem} asks for the edge usage
+probability function $\eta \colon E \to [0,1]$ of minimal variance over $\mu
+\in P(\Gamma_G)$:
+\[
+  \text{minimize } \operatorname{Var}(\eta)
+  \quad \text{subject to} \quad
+  \eta(e) = \mathbb P_\mu(e \in \underline\gamma) \ \forall e \in E, \quad \mu \in P(\Gamma_G).
+\]
+We write $\FEU(\Gamma_G)$ for this problem.
+\end{definition}
+
+\begin{definition}[Fair and forbidden trees]
+\label{def:fair-tree}
+\uses{def:meo}
+A spanning tree $\gamma \in \Gamma_G$ is a \emph{fair tree} if $\mu^*(\gamma) >
+0$ for some law $\mu^*$ optimal for $\MEO(\Gamma_G)$. The set of fair trees is
+denoted $\Gamma_G^f$. A tree $\gamma \in \Gamma_G \setminus \Gamma_G^f$ (if any
+exist) is a \emph{forbidden tree}.
+\end{definition}
+
+\section{Spanning tree modulus and the MEO problem}
+\label{sec:spanning-tree-modulus}
+
+This section follows Section 1.7 of the paper and connects the general
+modulus framework of Chapter~\ref{chap:common} back to spanning trees,
+recovering MEO and FEU as modulus problems. From here on the paper restricts
+to $p = 2$ and unweighted graphs ($\sigma \equiv 1$), and we do the same.
+
+\begin{definition}[Feasible partition]
+\label{def:feasible-partition}
+\uses{def:multigraph}
+A \emph{feasible partition} of $G = (V, E)$ is a partition $P = \{V_1, \dots,
+V_{k_P}\}$ of $V$ into $k_P \ge 2$ parts such that each induced subgraph
+$G(V_i)$ is connected. Its edge set $E_P \subseteq E$ consists of the edges
+joining vertices belonging to different parts.
+\end{definition}
+
+\begin{theorem}[Fulkerson dual of spanning trees]
+\label{thm:spanning-tree-fulkerson-dual}
+\uses{def:feasible-partition, def:fulkerson-dual, def:spanning-tree}
+Let $\Gamma_G$ be the family of spanning trees of $G = (V, E)$, with usage
+given by the indicator vectors $\mathbf 1_{\{e \in \gamma\}}$. The Fulkerson
+dual family $\widehat{\Gamma_G}$ is the set of vectors $\frac{1}{k_P - 1}
+\mathbf 1_{E_P}$, ranging over all feasible partitions $P$ of $G$.
+\end{theorem}
+
+\begin{theorem}[Spanning tree modulus, MEO, and FEU]
+\label{thm:modulus-meo-feu}
+\uses{def:modulus, def:meo, def:feu, thm:spanning-tree-fulkerson-dual}
+Let $\Gamma = \Gamma_G$ be the family of spanning trees of $G = (V, E)$ and let
+$\widehat\Gamma$ be its Fulkerson dual. Densities $\rho, \eta \in \mathbb
+R_{\ge 0}^E$ and a law $\mu \in P(\Gamma)$ are simultaneously optimal for
+$\Mod_2(\Gamma)$, $\Mod_2(\widehat\Gamma)$, and $\MEO(\Gamma)$ respectively if
+and only if
+\[
+  \rho \in \Adm(\Gamma), \quad \eta = \usageN^T \mu, \quad
+  \eta(e) = \frac{\rho(e)}{\Mod_2(\Gamma)} \ \forall e \in E, \quad
+  \mu(\gamma) (1 - \ell_\rho(\gamma)) = 0 \ \forall \gamma \in \Gamma.
+\]
+In particular,
+\[
+  \MEO(\Gamma) = \Mod_2(\widehat\Gamma) = \Mod_2(\Gamma)^{-1}.
+\]
+\end{theorem}
+
+\begin{corollary}[Weak duality for modulus]
+\label{cor:weak-duality}
+\uses{def:modulus}
+Let $\Gamma$ be a finite family of objects on $G$ with Fulkerson dual
+$\widehat\Gamma$. For any $\rho \in \Adm(\Gamma)$ and $\eta \in
+\Adm(\widehat\Gamma)$,
+\[
+  E_2(\rho) E_2(\eta) \ge 1, \qquad \text{where } E_2(\rho) := \sum_{e \in E} \sigma(e) \rho(e)^2,
+\]
+with equality if and only if $\rho$ and $\eta$ are optimal for
+$\Mod_2(\Gamma)$ and $\Mod_2(\widehat\Gamma)$ respectively.
+\end{corollary}

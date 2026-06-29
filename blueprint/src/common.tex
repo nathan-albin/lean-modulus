@@ -1,0 +1,133 @@
+\chapter{Common}
+\label{chap:common}
+
+This chapter collects definitions and results that are not specific to any one
+paper: the multigraph infrastructure, and the general theory of families of
+objects, Fulkerson duality, and modulus. Later papers' chapters specialize
+this material (e.g.\ to spanning trees) and build their results on top of it.
+
+\section{Multigraphs}
+
+\begin{definition}[Multigraph]
+\label{def:multigraph}
+\lean{Multigraph}
+\leanok
+Following the paragraph preceding Section 1.1 of \feupaperref{}: throughout, $G
+= (V, E)$ denotes a finite, connected multigraph with vertex set $V$ and edge
+set $E$. Parallel edges are allowed; self-loops are not.
+
+To formalize this, a multigraph on vertex type $V$ and edge type $E$ consists of
+a map $\mathrm{endpoints} \colon E \to \operatorname{Sym}^2(V)$ assigning to
+each edge its (unordered) pair of endpoints. By making the edges a separate type
+(rather than a relation on $V$ or a subset of unordered pairs of vertices), we
+implicilty allow parallel edges. They are  simply distinct elements of $E$ with
+the same image under $\mathrm{endpoints}$. Finiteness, connectedness, and the
+absence of self-loops are not built into the type itself. Instead, they are
+added explicitly wherever a paper's results need them, matching the
+``throughout this paper'' statement.
+
+For weighted multigraphs, $G = (V, E, \sigma)$, we treat these as a multigraph
+$G = (V, E)$ together with a weight function $\sigma \in \mathbb R_{>0}^E$.
+\end{definition}
+
+\begin{definition}[Spanning tree]
+\label{def:spanning-tree}
+\uses{def:multigraph}
+\lean{Multigraph.IsSpanningTree}
+\leanok
+A set of edges $T \subseteq E$ is a \emph{spanning tree} of $G$ if it touches
+every vertex of $V$ and contains no cycle. In particular, this immediately rules
+out parallel edges, which would form a 2-cycle.
+
+This is formalized in \texttt{Multigraph.IsSpanningTree}: $T$ is acyclic (no
+loops, no parallel edges within $T$, and the simple graph obtained by forgetting
+edge identities is acyclic) and that same simple graph is connected, i.e.\
+touches and joins every vertex of $V$.
+\end{definition}
+
+\section{Families of objects and Fulkerson duality}
+
+This section follows Section 1.5 of \feupaperref{}. Families of objects generalize
+spanning trees (and paths, cuts, etc.) to a common framework, in which the
+notion of an admissible density and its Fulkerson dual family are defined.
+Spanning trees are recovered as the special case worked out in
+Section~\ref{sec:spanning-tree-modulus}.
+
+\begin{definition}[Family of objects]
+\label{def:family-of-objects}
+\uses{def:multigraph}
+Let $G = (V, E, \sigma)$ be a multigraph with edge weights $\sigma \in
+\mathbb R_{>0}^E$. A \emph{family of objects} on $G$ is a pair $(\Gamma, \usageN)$
+where $\Gamma$ is a countable index set and $\usageN \in \mathbb R_{\ge 0}^{\Gamma
+\times E}$ is a \emph{usage matrix}: $\usageN(\gamma, e)$ is the usage of edge $e$ by
+object $\gamma$. We identify each $\gamma \in \Gamma$ with its usage vector
+$\usageN(\gamma, \cdot)^T \in \mathbb R_{\ge 0}^E$ ($\eta$-space).
+\end{definition}
+
+\begin{definition}[Length of an object]
+\label{def:length}
+\uses{def:family-of-objects}
+A point $\rho \in \mathbb R_{\ge 0}^E$ ($\rho$-space) assigns a cost $\rho(e)$
+to each edge. The \emph{length} of an object $\gamma \in \Gamma$ with respect
+to $\rho$ is
+\[
+  \ell_\rho(\gamma) := \sum_{e \in E} \usageN(\gamma, e) \rho(e) = \usageN\rho.
+\]
+\end{definition}
+
+\begin{definition}[Admissible density and Fulkerson dual family]
+\label{def:fulkerson-dual}
+\uses{def:length}
+A density $\rho \in \mathbb R_{\ge 0}^E$ is \emph{admissible} for a family
+$(\Gamma, \usageN)$ if $\ell_\rho(\gamma) \ge 1$ for every $\gamma \in \Gamma$,
+equivalently $\usageN \rho \ge \mathbf 1$. Write
+\[
+  \Adm(\Gamma) := \{\rho \in \mathbb R_{\ge 0}^E : \usageN \rho \ge \mathbf 1\}.
+\]
+The \emph{Fulkerson dual family} of $\Gamma$ is $\widehat\Gamma :=
+\operatorname{ext}(\Adm(\Gamma)) \subset \mathbb R_{\ge 0}^E$, the set of
+extreme points of $\Adm(\Gamma)$, viewed as a family of objects in
+$\rho$-space.
+\end{definition}
+
+\begin{theorem}[Fulkerson duality]
+\label{thm:fulkerson-duality}
+\uses{def:fulkerson-dual}
+For any family of objects $\Gamma$, $\widehat{\widehat\Gamma} \subseteq \Gamma$.
+\end{theorem}
+
+\section{Modulus of families of objects}
+
+This section follows Section 1.6 of \feupaperref{}.
+
+\begin{definition}[$p$-modulus]
+\label{def:modulus}
+\uses{def:fulkerson-dual}
+Fix $1 \le p < \infty$. The \emph{$p$-modulus} of a family of objects $\Gamma$
+on $G = (V, E, \sigma)$ is
+\[
+  \Mod_{p,\sigma}(\Gamma) := \inf_{\rho \in \Adm(\Gamma)} \sum_{e \in E} \sigma(e) \rho(e)^p.
+\]
+A density achieving this infimum is called \emph{extremal} (or optimal); it is
+unique when $1 < p < \infty$.
+\end{definition}
+
+\begin{theorem}[Fulkerson duality for modulus]
+\label{thm:modulus-fulkerson-duality}
+\uses{def:modulus}
+Let $1 < p < \infty$ and let $q$ satisfy $pq = p + q$. Then
+\[
+  \Mod_{p,\sigma}(\Gamma)^{1/p} \, \Mod_{q,\sigma^{1-q}}(\widehat\Gamma)^{1/q} = 1,
+\]
+and the extremal density $\eta^*$ for $\Mod_{q,\sigma^{1-q}}(\widehat\Gamma)$ is
+related to the extremal density $\rho^*$ for $\Mod_{p,\sigma}(\Gamma)$ by
+\[
+  \eta^*(e) = \frac{\sigma(e) \rho^*(e)^{p-1}}{\Mod_{p,\sigma}(\Gamma)} \qquad \forall e \in E.
+\]
+In particular, when $p = q = 2$,
+\[
+  \Mod_{2,\sigma}(\Gamma) \, \Mod_{2,\sigma^{-1}}(\widehat\Gamma) = 1,
+  \qquad
+  \eta^*(e) = \frac{\sigma(e)}{\Mod_{2,\sigma}(\Gamma)} \rho^*(e).
+\]
+\end{theorem}
