@@ -9,7 +9,7 @@ usemathjax: true
 Formalizations, in [Lean 4](https://lean-lang.org/) and [Mathlib](https://leanprover-community.github.io/mathlib4_docs/),
 of results from research on graphs, networks, and the modulus of families of objects. This is a
 working project — results are added incrementally, and the [blueprint](blueprint/) below tracks
-what's genuinely proved versus stated with `sorry`.
+what's genuinely proved versus proved with `sorry`.
 
 ## Papers
 
@@ -22,9 +22,8 @@ More papers will be added here as they're formalized.
 ## Dependency graph
 
 Each node below is a definition or theorem from the blueprint; colors show what's formalized,
-what's ready to formalize next, and what's still blocked. See the
-[full-page version]({{ site.url }}/blueprint/dep_graph_document.html) for the legend and
-search/filter controls.
+what's ready to formalize next, and what's still blocked. Click a node to see its statement. Check the
+legend for color coding. You can also view the [full-page version]({{ site.url }}/blueprint/dep_graph_document.html).
 
 <iframe src="{{ site.url }}/blueprint/dep_graph_document.html" width="100%" height="600" style="border: 1px solid #ddd; border-radius: 6px;"></iframe>
 

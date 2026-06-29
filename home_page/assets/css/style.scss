@@ -7,3 +7,26 @@
 @import "{{ site.theme }}";
 
 /* Put your rules below this line */
+
+/* Nav links in the header (Blueprint/Docs/GitHub) -- Slate has no built-in
+   button class for these, unlike Cayman's .btn, so style them to match its
+   dark header gradient. */
+.nav-links {
+  margin-top: 15px;
+}
+
+.nav-links a {
+  display: inline-block;
+  margin: 0 6px 6px 0;
+  padding: 6px 14px;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
