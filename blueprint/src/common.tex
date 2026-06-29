@@ -26,8 +26,13 @@ absence of self-loops are not built into the type itself. Instead, they are
 added explicitly wherever a paper's results need them, matching the
 ``throughout this paper'' statement.
 
-For weighted multigraphs, $G = (V, E, \sigma)$, we treat these as a multigraph
-$G = (V, E)$ together with a weight function $\sigma \in \mathbb R_{>0}^E$.
+Throughout, we write $G = (V, E, \sigma)$ for a multigraph $G = (V, E)$ together
+with an edge-weight function $\sigma \in \mathbb R_{>0}^E$. However, $\sigma$ is
+not part of the multigraph structure itself. We use the triple notation for
+modulus results, which is where the edge weights are relevant. . For the
+weight-agnostic combinatorial defintions and theorems (families of objects,
+densities, admissibility, the Fulkerson dual) we write the plain pair $G = (V,
+E)$ instead, since none of those notions depend on $\sigma$.
 \end{definition}
 
 \begin{definition}[Spanning tree]
@@ -53,47 +58,62 @@ notion of an admissible density and its Fulkerson dual family are defined.
 Spanning trees are recovered as the special case worked out in
 Section~\ref{sec:spanning-tree-modulus}.
 
+The machinery of Fulkerson duality has been developed in the context of finite
+families of objects (such as the spanning trees of a finite graph). The results
+in this section are stated for finite families, but the definitions are given in
+a more general context that allows for countably infinite families as well.
+
 \begin{definition}[Family of objects]
 \label{def:family-of-objects}
 \uses{def:multigraph}
-Let $G = (V, E, \sigma)$ be a multigraph with edge weights $\sigma \in
-\mathbb R_{>0}^E$. A \emph{family of objects} on $G$ is a pair $(\Gamma, \usageN)$
-where $\Gamma$ is a countable index set and $\usageN \in \mathbb R_{\ge 0}^{\Gamma
-\times E}$ is a \emph{usage matrix}: $\usageN(\gamma, e)$ is the usage of edge $e$ by
-object $\gamma$. We identify each $\gamma \in \Gamma$ with its usage vector
-$\usageN(\gamma, \cdot)^T \in \mathbb R_{\ge 0}^E$ ($\eta$-space).
+Let $G = (V, E)$ be a multigraph. A \emph{family of objects} on $G$ is a
+nonempty countable set $\Gamma \subseteq \mathbb R_{\ge 0}^E$ ($\eta$-space). In
+practice, each each $\gamma \in \Gamma$ is associated with graph-theoretic
+object (a spanning tree, path, cut, etc.) identified with its \emph{usage
+vector}: $\gamma(e)$ is the usage of edge $e$ by $\gamma$.
+\end{definition}
+
+\begin{definition}[Density]
+\label{def:density}
+\uses{def:multigraph}
+A \emph{density} is a point $\rho \in \mathbb R_{\ge 0}^E$ that assigns a
+nonnegative cost $\rho(e)$ to each edge $e \in E$.
 \end{definition}
 
 \begin{definition}[Length of an object]
 \label{def:length}
-\uses{def:family-of-objects}
-A point $\rho \in \mathbb R_{\ge 0}^E$ ($\rho$-space) assigns a cost $\rho(e)$
-to each edge. The \emph{length} of an object $\gamma \in \Gamma$ with respect
-to $\rho$ is
+\uses{def:family-of-objects, def:density}
+Let $\rho$ be a density on $G$. The \emph{length} of an object $\gamma \in
+\Gamma$ with respect to $\rho$ is
 \[
-  \ell_\rho(\gamma) := \sum_{e \in E} \usageN(\gamma, e) \rho(e) = \usageN\rho.
+  \ell_\rho(\gamma) := \sum_{e \in E} \gamma(e) \rho(e).
 \]
 \end{definition}
 
-\begin{definition}[Admissible density and Fulkerson dual family]
-\label{def:fulkerson-dual}
+\begin{definition}[Admissible density]
+\label{def:admissible-density}
 \uses{def:length}
 A density $\rho \in \mathbb R_{\ge 0}^E$ is \emph{admissible} for a family
-$(\Gamma, \usageN)$ if $\ell_\rho(\gamma) \ge 1$ for every $\gamma \in \Gamma$,
-equivalently $\usageN \rho \ge \mathbf 1$. Write
+$\Gamma$ if $\ell_\rho(\gamma) \ge 1$ for every $\gamma \in \Gamma$. The
+\emph{admissible set} of $\Gammma$ is defined as
 \[
-  \Adm(\Gamma) := \{\rho \in \mathbb R_{\ge 0}^E : \usageN \rho \ge \mathbf 1\}.
+  \Adm(\Gamma) := \{\rho \in \mathbb R_{\ge 0}^E : \ell_\rho(\gamma) \ge 1 \ \forall \gamma \in \Gamma\}.
 \]
+\end{definition}
+
+\begin{definition}[Fulkerson dual family]
+\label{def:fulkerson-dual}
+\uses{def:admissible-density}
+Let $\Gamma$ be a finite family of objects on $G = (V, E)$.
 The \emph{Fulkerson dual family} of $\Gamma$ is $\widehat\Gamma :=
 \operatorname{ext}(\Adm(\Gamma)) \subset \mathbb R_{\ge 0}^E$, the set of
-extreme points of $\Adm(\Gamma)$, viewed as a family of objects in
-$\rho$-space.
+extreme points of $\Adm(\Gamma)$.
 \end{definition}
 
 \begin{theorem}[Fulkerson duality]
 \label{thm:fulkerson-duality}
 \uses{def:fulkerson-dual}
-For any family of objects $\Gamma$, $\widehat{\widehat\Gamma} \subseteq \Gamma$.
+For any finite family of objects $\Gamma$, $\widehat{\widehat\Gamma} \subseteq \Gamma$.
 \end{theorem}
 
 \section{Modulus of families of objects}
@@ -103,19 +123,29 @@ This section follows Section 1.6 of \feupaperref{}.
 \begin{definition}[$p$-modulus]
 \label{def:modulus}
 \uses{def:fulkerson-dual}
+Let $G = (V, E, \sigma)$ be a multigraph.
 Fix $1 \le p < \infty$. The \emph{$p$-modulus} of a family of objects $\Gamma$
-on $G = (V, E, \sigma)$ is
+on $G$ is
 \[
   \Mod_{p,\sigma}(\Gamma) := \inf_{\rho \in \Adm(\Gamma)} \sum_{e \in E} \sigma(e) \rho(e)^p.
 \]
-A density achieving this infimum is called \emph{extremal} (or optimal); it is
-unique when $1 < p < \infty$.
+A density achieving this infimum is called \emph{extremal} (or optimal).
 \end{definition}
+
+\begin{theorem}[Existence and uniqueness of the extremal density]
+\label{thm:modulus-extremal-unique}
+\uses{def:modulus}
+Let $\Gamma$ be a finite family of objects on $G = (V, E, \sigma)$ with
+$\Adm(\Gamma) \ne \emptyset$, and fix $1 < p < \infty$. Then there is a unique
+density $\rho^* \in \Adm(\Gamma)$ achieving $\Mod_{p,\sigma}(\Gamma)$.
+\end{theorem}
 
 \begin{theorem}[Fulkerson duality for modulus]
 \label{thm:modulus-fulkerson-duality}
-\uses{def:modulus}
-Let $1 < p < \infty$ and let $q$ satisfy $pq = p + q$. Then
+\uses{def:modulus, thm:modulus-extremal-unique}
+Let $G = (V, E, \sigma)$ be a multigraph. Let $\Gamma$ be a finite family of
+objects on $G$. Let $1 < p <
+\infty$ and let $q$ satisfy $pq = p + q$. Then
 \[
   \Mod_{p,\sigma}(\Gamma)^{1/p} \, \Mod_{q,\sigma^{1-q}}(\widehat\Gamma)^{1/q} = 1,
 \]

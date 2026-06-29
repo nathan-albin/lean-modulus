@@ -94,8 +94,8 @@ joining vertices belonging to different parts.
 \begin{theorem}[Fulkerson dual of spanning trees]
 \label{thm:spanning-tree-fulkerson-dual}
 \uses{def:feasible-partition, def:fulkerson-dual, def:spanning-tree}
-Let $\Gamma_G$ be the family of spanning trees of $G = (V, E)$, with usage
-given by the indicator vectors $\mathbf 1_{\{e \in \gamma\}}$. The Fulkerson
+Let $\Gamma_G$ be the (finite) family of spanning trees of $G = (V, E)$, with
+usage given by the indicator vectors $\mathbf 1_{\{e \in \gamma\}}$. The Fulkerson
 dual family $\widehat{\Gamma_G}$ is the set of vectors $\frac{1}{k_P - 1}
 \mathbf 1_{E_P}$, ranging over all feasible partitions $P$ of $G$.
 \end{theorem}
@@ -103,13 +103,13 @@ dual family $\widehat{\Gamma_G}$ is the set of vectors $\frac{1}{k_P - 1}
 \begin{theorem}[Spanning tree modulus, MEO, and FEU]
 \label{thm:modulus-meo-feu}
 \uses{def:modulus, def:meo, def:feu, thm:spanning-tree-fulkerson-dual}
-Let $\Gamma = \Gamma_G$ be the family of spanning trees of $G = (V, E)$ and let
+Let $\Gamma = \Gamma_G$ be the (finite) family of spanning trees of $G = (V, E)$ and let
 $\widehat\Gamma$ be its Fulkerson dual. Densities $\rho, \eta \in \mathbb
 R_{\ge 0}^E$ and a law $\mu \in P(\Gamma)$ are simultaneously optimal for
 $\Mod_2(\Gamma)$, $\Mod_2(\widehat\Gamma)$, and $\MEO(\Gamma)$ respectively if
 and only if
 \[
-  \rho \in \Adm(\Gamma), \quad \eta = \usageN^T \mu, \quad
+  \rho \in \Adm(\Gamma), \quad \eta(e) = \sum_{\gamma \in \Gamma} \gamma(e) \, \mu(\gamma) \ \forall e \in E, \quad
   \eta(e) = \frac{\rho(e)}{\Mod_2(\Gamma)} \ \forall e \in E, \quad
   \mu(\gamma) (1 - \ell_\rho(\gamma)) = 0 \ \forall \gamma \in \Gamma.
 \]
