@@ -52,4 +52,16 @@ variable {E : Type*} [Finite E]
 def Adm (Γ : FamilyOfObjects E) : Set (Density E) :=
   {ρ | ρ.IsAdmissible Γ}
 
+/-- Two families of objects are *equivalent* if they have the same admissible
+set, i.e. they impose exactly the same constraints on densities. This avoids
+over-distinguishing one family from another obtained by adding or removing
+redundant objects (objects whose admissibility constraint is implied by the
+others). -/
+def Equivalent (Γ Γ' : FamilyOfObjects E) : Prop :=
+  Γ.Adm = Γ'.Adm
+
+instance : Setoid (FamilyOfObjects E) where
+  r := Equivalent
+  iseqv := ⟨fun _ => rfl, Eq.symm, Eq.trans⟩
+
 end FamilyOfObjects

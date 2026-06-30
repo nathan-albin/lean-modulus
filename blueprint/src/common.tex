@@ -128,6 +128,22 @@ $\Gamma$ if $\ell_\rho(\gamma) \ge 1$ for every $\gamma \in \Gamma$. The
 \]
 \end{definition}
 
+\begin{definition}[Equivalent families]
+\label{def:family-equivalent}
+\uses{def:admissible-density}
+\lean{FamilyOfObjects.Equivalent}
+\leanok
+Two families of objects $\Gamma$ and $\Gamma'$ on $G = (V, E)$ are
+\emph{equivalent}, written $\Gamma \simeq \Gamma'$, if $\Adm(\Gamma) =
+\Adm(\Gamma')$, i.e.\ they impose exactly the same constraints on densities.
+Equivalent families are interchangeable for every purpose in this chapter
+(admissibility, the Fulkerson dual, modulus): only $\Adm(\Gamma)$ matters, not
+the specific objects realizing it. In particular, $\Gamma \simeq \Gamma'$
+whenever $\Gamma'$ is obtained from $\Gamma$ by adding or removing an object
+whose admissibility constraint is implied by the others (a \emph{redundant}
+object).
+\end{definition}
+
 \begin{definition}[Fulkerson dual family]
 \label{def:fulkerson-dual}
 \uses{def:admissible-density}
