@@ -66,11 +66,24 @@ a more general context that allows for countably infinite families as well.
 \begin{definition}[Family of objects]
 \label{def:family-of-objects}
 \uses{def:multigraph}
+\lean{FamilyOfObjects}
+\leanok
 Let $G = (V, E)$ be a multigraph. A \emph{family of objects} on $G$ is a
 nonempty countable set $\Gamma \subseteq \mathbb R_{\ge 0}^E$ ($\eta$-space). In
 practice, each each $\gamma \in \Gamma$ is associated with graph-theoretic
 object (a spanning tree, path, cut, etc.) identified with its \emph{usage
 vector}: $\gamma(e)$ is the usage of edge $e$ by $\gamma$.
+\end{definition}
+
+\begin{definition}[Family with no zero object]
+\label{def:family-no-zero-object}
+\uses{def:family-of-objects}
+\lean{FamilyOfObjects.NoZeroObject}
+\leanok
+A family of objects $\Gamma$ \emph{has no zero object} if every $\gamma \in
+\Gamma$ has $\gamma(e) > 0$ for some edge $e \in E$, i.e.\ $\gamma \ne 0$. This
+rules out the trivial all-zero object, for which no density could ever be
+admissible.
 \end{definition}
 
 \begin{definition}[Density]
