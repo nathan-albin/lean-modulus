@@ -1,6 +1,7 @@
 -- Families of objects (Section 1.5 of the FEU paper): a common framework for
 -- spanning trees, paths, cuts, etc., each identified with its usage vector.
 import Mathlib.Algebra.BigOperators.Finprod
+import Mathlib.Analysis.Convex.Extreme
 import Mathlib.Data.NNReal.Basic
 
 open scoped NNReal
@@ -63,5 +64,11 @@ def Equivalent (Γ Γ' : FamilyOfObjects E) : Prop :=
 instance : Setoid (FamilyOfObjects E) where
   r := Equivalent
   iseqv := ⟨fun _ => rfl, Eq.symm, Eq.trans⟩
+
+/-- The Fulkerson dual family of `Γ`: the extreme points of its admissible
+set. `Set.extremePoints` only needs a `Semiring`/`SMul` structure (not a full
+vector space with subtraction), so this is stated directly over `ℝ≥0`. -/
+def FulkersonDual (Γ : FamilyOfObjects E) : FamilyOfObjects E :=
+  Set.extremePoints ℝ≥0 Γ.Adm
 
 end FamilyOfObjects
