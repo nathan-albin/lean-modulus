@@ -120,21 +120,43 @@ For any finite family of objects $\Gamma$, $\widehat{\widehat\Gamma} \subseteq \
 
 This section follows Section 1.6 of \feupaperref{}.
 
+\begin{definition}[Energy of a density]
+\label{def:energy}
+\uses{def:density}
+Let $1 \le p \le \infty$ and let $G = (V, E, \sigma)$ be a multigraph. The \emph{energy} of a density $\rho$ is
+\[
+  \Energy_{p,\sigma}(\rho) := 
+  \begin{cases}
+    \sum_{e \in E} \sigma(e) \rho(e)^p & 1 \le p < \infty, \\
+    \max_{e \in E} \sigma(e) \rho(e) & p = \infty.
+  \end{cases}
+\]
+\end{definition}
+
 \begin{definition}[$p$-modulus]
 \label{def:modulus}
-\uses{def:fulkerson-dual}
+\uses{def:admissible-density, def:energy}
 Let $G = (V, E, \sigma)$ be a multigraph.
-Fix $1 \le p < \infty$. The \emph{$p$-modulus} of a family of objects $\Gamma$
+Fix $1 \le p \le \infty$. The \emph{$p$-modulus} of a family of objects $\Gamma$
 on $G$ is
 \[
-  \Mod_{p,\sigma}(\Gamma) := \inf_{\rho \in \Adm(\Gamma)} \sum_{e \in E} \sigma(e) \rho(e)^p.
+  \Mod_{p,\sigma}(\Gamma) := \inf_{\rho \in \Adm(\Gamma)} \Energy_{p,\sigma}(\rho).
 \]
 A density achieving this infimum is called \emph{extremal} (or optimal).
 \end{definition}
 
+\begin{definition}[Extremal density]
+\label{def:extremal-density}
+\uses{def:modulus}
+A density $\rho^* \in \Adm(\Gamma)$ is \emph{extremal} (or optimal) for $\Mod_{p,\sigma}(\Gamma)$ if
+\[
+  \Mod_{p,\sigma}(\Gamma) = \Energy_{p,\sigma}(\rho^*).
+\]
+\end{definition}
+
 \begin{theorem}[Existence and uniqueness of the extremal density]
 \label{thm:modulus-extremal-unique}
-\uses{def:modulus}
+\uses{def:extremal-density}
 Let $\Gamma$ be a finite family of objects on $G = (V, E, \sigma)$ with
 $\Adm(\Gamma) \ne \emptyset$, and fix $1 < p < \infty$. Then there is a unique
 density $\rho^* \in \Adm(\Gamma)$ achieving $\Mod_{p,\sigma}(\Gamma)$.
