@@ -27,3 +27,11 @@
 % No bibliography backend is configured, so papers are cited with a plain
 % hyperlinked author/year rather than \cite. One macro per paper as they're added.
 \newcommand{\feupaperref}{\href{https://doi.org/10.1016/j.disc.2020.112282}{Albin, Clemens, Hoare, Poggi-Corradini, Sit, and Tymochko (2021)}}
+
+% Flags a place where the Lean formalization diverges from the on-paper
+% definition for implementation reasons (not mathematical ones), with a link
+% to the file under docs/ that explains the divergence in detail. #1 is a
+% short inline summary; #2 is the docs/ filename (e.g. common.md).
+\newcommand{\implnote}[2]{\par\noindent\textit{Implementation note: #1} See
+  \href{https://github.com/nathan-albin/lean-modulus/blob/main/docs/#2}
+  {\texttt{docs/#2}} for details.}

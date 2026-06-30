@@ -35,3 +35,25 @@ If a future paper needs general $p$, these deferred theorems are the natural
 place to pick that work back up. One possible direction for this is to follow up
 on the stalled [mathlib4 PR #6058](https://github.com/leanprover-community/mathlib4/pull/6058).
 
+## Length of an object: `finsum` instead of `Finset.sum`
+
+`def:length` defines $\ell_\rho(\gamma) := \sum_{e \in E} \gamma(e) \rho(e)$.
+In Lean (`Density.length` in `LeanModulus/Common/FamilyOfObjects.lean`), this
+sum is implemented with `finsum` (the `∑ᶠ` notation from
+`Mathlib.Algebra.BigOperators.Finprod`) rather than `Finset.sum` over
+`Finset.univ`.
+
+The two compute the same value whenever $E$ is finite, which is the standing
+assumption throughout the project (see `def:multigraph`). The difference is
+purely about what typeclass assumption is needed to write the sum down:
+`Finset.sum Finset.univ` requires a `Fintype E` instance (an enumeration of
+`E`), whereas `finsum` only requires `Finite E` (a *proposition* that
+such an enumeration exists). Since the rest of the `Common` infrastructure (e.g.
+`GraphicMatroid.lean`) already commits to `[Finite E]` rather than `[Fintype E]`
+as its finiteness assumption, `finsum` lets `Density.length` match that
+convention.
+
+This is purely a representational choice with no mathematical content: for
+any `[Finite E]`, `finsum_eq_sum_of_fintype` (or the corresponding lemma
+through `Fintype.ofFinite`) converts between the two freely.
+

@@ -6,6 +6,11 @@ paper: the multigraph infrastructure, and the general theory of families of
 objects, Fulkerson duality, and modulus. Later papers' chapters specialize
 this material (e.g.\ to spanning trees) and build their results on top of it.
 
+When the Lean formalization needs extra explanation, this is indicated inline
+with an \emph{implementation note} pointing to the relevant file under
+\texttt{docs/} in the GitHub repository, which explains the formalization
+decisions in more detail.
+
 \section{Multigraphs}
 
 \begin{definition}[Multigraph]
@@ -89,6 +94,8 @@ admissible.
 \begin{definition}[Density]
 \label{def:density}
 \uses{def:multigraph}
+\lean{Density}
+\leanok
 A \emph{density} is a point $\rho \in \mathbb R_{\ge 0}^E$ that assigns a
 nonnegative cost $\rho(e)$ to each edge $e \in E$.
 \end{definition}
@@ -96,16 +103,23 @@ nonnegative cost $\rho(e)$ to each edge $e \in E$.
 \begin{definition}[Length of an object]
 \label{def:length}
 \uses{def:family-of-objects, def:density}
+\lean{Density.length}
+\leanok
 Let $\rho$ be a density on $G$. The \emph{length} of an object $\gamma \in
 \Gamma$ with respect to $\rho$ is
 \[
   \ell_\rho(\gamma) := \sum_{e \in E} \gamma(e) \rho(e).
 \]
+\implnote{the sum is implemented with \texttt{finsum} rather than
+\texttt{Finset.sum} over \texttt{Finset.univ}, so that it only requires
+\texttt{Finite E}, not a \texttt{Fintype} instance.}{common.md}
 \end{definition}
 
 \begin{definition}[Admissible density]
 \label{def:admissible-density}
 \uses{def:length}
+\lean{Density.IsAdmissible, FamilyOfObjects.Adm}
+\leanok
 A density $\rho \in \mathbb R_{\ge 0}^E$ is \emph{admissible} for a family
 $\Gamma$ if $\ell_\rho(\gamma) \ge 1$ for every $\gamma \in \Gamma$. The
 \emph{admissible set} of $\Gamma$ is defined as
