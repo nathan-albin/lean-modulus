@@ -82,6 +82,75 @@ modulus framework of Chapter~\ref{chap:common} back to spanning trees,
 recovering MEO and FEU as modulus problems. From here on the paper restricts
 to $p = 2$ and unweighted graphs ($\sigma \equiv 1$), and we do the same.
 
+\subsection{Strong duality for 2-modulus}
+
+The general existence/uniqueness and Fulkerson duality theorems of
+Section~\ref{chap:common} (Theorems~\ref{thm:modulus-extremal-unique} and
+\ref{thm:modulus-fulkerson-duality}) are stated for general $1 < p < \infty$
+but are not yet formalized in that generality. The results below are the
+$p = 2$ specializations actually used by this chapter; they are proved
+directly using the connection between the two-norm and the inner product.
+
+\begin{theorem}[Existence and uniqueness of the 2-extremal density]
+\label{thm:extremal-unique-two}
+\uses{def:extremal-density}
+Let $\Gamma$ be a finite family of objects on $G = (V, E, \sigma)$ with
+$\Adm(\Gamma) \ne \emptyset$. There is a unique density $\rho^* \in
+\Adm(\Gamma)$ achieving $\Mod_{2,\sigma}(\Gamma)$.
+\end{theorem}
+
+\begin{theorem}[Strong duality for 2-modulus]
+\label{thm:strong-duality-two}
+\uses{def:admissible-density, thm:extremal-unique-two}
+Let $\Gamma$ be a finite family of objects on $G = (V, E, \sigma)$ with
+$\Adm(\Gamma) \ne \emptyset$, and let $\rho^*$ be the extremal density for
+$\Mod_{2,\sigma}(\Gamma)$. There exists $\lambda^* \in \mathbb R_{\ge
+0}^\Gamma$ such that
+\[
+  \rho^*(e) = \frac{1}{2\sigma(e)} \sum_{\gamma \in \Gamma} \gamma(e)
+  \lambda^*(\gamma) \qquad \forall e \in E,
+\]
+\[
+  \lambda^*(\gamma) \bigl(1 - \ell_{\rho^*}(\gamma)\bigr) = 0 \qquad \forall
+  \gamma \in \Gamma,
+\]
+and
+\[
+  \Mod_{2,\sigma}(\Gamma) = \sum_{\gamma \in \Gamma} \lambda^*(\gamma) -
+  \frac14 \sum_{e \in E} \frac{1}{\sigma(e)} \Bigl(\sum_{\gamma \in \Gamma}
+  \gamma(e) \lambda^*(\gamma)\Bigr)^{\!2}.
+\]
+\end{theorem}
+
+\begin{corollary}[Weak duality for the Lagrangian dual]
+\label{cor:weak-duality-two}
+\uses{def:admissible-density, def:energy}
+For any $\rho \in \Adm(\Gamma)$ and any $\lambda \in \mathbb R_{\ge
+0}^\Gamma$,
+\[
+  \Energy_{2,\sigma}(\rho) \ \ge\ \sum_{\gamma \in \Gamma} \lambda(\gamma) -
+  \frac14 \sum_{e \in E} \frac{1}{\sigma(e)} \Bigl(\sum_{\gamma \in \Gamma}
+  \gamma(e) \lambda(\gamma)\Bigr)^{\!2},
+\]
+with equality if and only if $\rho$ and $\lambda$ satisfy the stationarity
+and complementary slackness conditions of
+Theorem~\ref{thm:strong-duality-two}.
+\end{corollary}
+
+\begin{corollary}[2-modulus Fulkerson duality]
+\label{cor:fulkerson-duality-two}
+\uses{thm:strong-duality-two, def:fulkerson-dual}
+In the setting of Theorem~\ref{thm:strong-duality-two}, define $\eta^*(e) :=
+\sigma(e) \rho^*(e) / \Mod_{2,\sigma}(\Gamma)$ for $e \in E$. Then $\eta^*
+\in \Adm(\widehat\Gamma)$ and $\eta^*$ is extremal for
+$\Mod_{2,\sigma^{-1}}(\widehat\Gamma)$, with
+\[
+  \Mod_{2,\sigma}(\Gamma) \, \Mod_{2,\sigma^{-1}}(\widehat\Gamma) = 1.
+\]
+This recovers the $p = q = 2$ case of
+Theorem~\ref{thm:modulus-fulkerson-duality} without the general machinery.
+\end{corollary}
+
 \begin{definition}[Feasible partition]
 \label{def:feasible-partition}
 \uses{def:multigraph}
@@ -102,7 +171,8 @@ dual family $\widehat{\Gamma_G}$ is the set of vectors $\frac{1}{k_P - 1}
 
 \begin{theorem}[Spanning tree modulus, MEO, and FEU]
 \label{thm:modulus-meo-feu}
-\uses{def:modulus, def:meo, def:feu, thm:spanning-tree-fulkerson-dual}
+\uses{def:modulus, def:meo, def:feu, thm:spanning-tree-fulkerson-dual,
+thm:strong-duality-two}
 Let $\Gamma = \Gamma_G$ be the (finite) family of spanning trees of $G = (V, E)$ and let
 $\widehat\Gamma$ be its Fulkerson dual. Densities $\rho, \eta \in \mathbb
 R_{\ge 0}^E$ and a law $\mu \in P(\Gamma)$ are simultaneously optimal for
