@@ -38,6 +38,25 @@ over `Finset.univ`) so that this doesn't need a `Fintype E` instance, only
 noncomputable def length (ρ : Density E) (γ : E → ℝ≥0) : ℝ≥0 :=
   ∑ᶠ e, γ e * ρ e
 
+/-- The length with respect to the sum of two densities is the
+sum of the lengths. -/
+theorem length_add (ρ₁ ρ₂ : Density E) (γ : E → ℝ≥0) :
+    (ρ₁ + ρ₂).length γ = ρ₁.length γ + ρ₂.length γ := by
+  rw [length, length, length]
+  simp_all only [Pi.add_apply]
+  ring_nf
+  exact finsum_add_distrib (Set.toFinite _) (Set.toFinite _)
+
+/-- The length with respect to a scalar multiple of a density is
+the scalar multiple of the length. -/
+theorem length_smul {E : Type*} (ρ : Density E) (c : ℝ≥0) (γ : E → ℝ≥0) :
+    (c • ρ).length γ = c * ρ.length γ := by
+  rw [length, length]
+  simp_all only [Pi.smul_apply]
+  ring_nf
+  rw [←finsum_mul]
+  ring
+
 /-- A density `ρ` is admissible for a family `Γ` if every object in `Γ` has
 length at least `1` with respect to `ρ`. -/
 def IsAdmissible (ρ : Density E) (Γ : FamilyOfObjects E) : Prop :=
@@ -52,6 +71,24 @@ variable {E : Type*} [Finite E]
 /-- The admissible set of a family `Γ`: all densities admissible for it. -/
 def Adm (Γ : FamilyOfObjects E) : Set (Density E) :=
   {ρ | ρ.IsAdmissible Γ}
+
+/-- The admissible set `Adm(Γ)`of a family `Γ` is convex. -/
+theorem convex_adm (Γ : FamilyOfObjects E) : Convex ℝ≥0 Γ.Adm := by
+  rw [Convex]
+  intro ρ₁ hρ₁
+  rw [StarConvex]
+  intro ρ₂ hρ₂ θ₁ θ₂ hθ₁ hθ₂ hsum
+  rw [Adm, Set.mem_setOf, Density.IsAdmissible]
+  intro γ hγ
+  rw [Density.length_add, Density.length_smul, Density.length_smul]
+  have h₁ := hρ₁ γ hγ
+  have h₂ := hρ₂ γ hγ
+  have h₁' := mul_le_mul_of_nonneg_left h₁ hθ₁
+  rw [mul_one] at h₁'
+  have h₂' := mul_le_mul_of_nonneg_left h₂ hθ₂
+  rw [mul_one] at h₂'
+  rw [←hsum]
+  exact add_le_add h₁' h₂'
 
 /-- Two families of objects are *equivalent* if they have the same admissible
 set, i.e. they impose exactly the same constraints on densities. This avoids
