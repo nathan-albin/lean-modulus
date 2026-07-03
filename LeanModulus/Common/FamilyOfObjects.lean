@@ -1,6 +1,9 @@
 import Mathlib.Algebra.BigOperators.Finprod
 import Mathlib.Analysis.Convex.Extreme
 import Mathlib.Data.NNReal.Basic
+import Mathlib.Topology.Algebra.Monoid
+import Mathlib.Topology.Instances.NNReal.Lemmas
+import Mathlib.Topology.Order.OrderClosed
 
 /-!
 # Families of objects
@@ -8,10 +11,11 @@ import Mathlib.Data.NNReal.Basic
 Families of objects (Section 1.5 of the FEU paper): a common framework for spanning trees,
 paths, cuts, etc., each identified with its usage vector.
 
-Everything here is stated over `ℝ≥0`: `Density E := E → ℝ≥0` has no subtraction and no
-topology, only the semiring/convexity structure needed for `Adm`, `Equivalent`, and
-`FulkersonDual`. The companion coercion into `E → ℝ` (needed to bring in real-analysis
-machinery like Krein-Milman) lives in `LeanModulus.Common.ToReal`.
+Everything here is stated over `ℝ≥0`: `Density E := E → ℝ≥0` has no subtraction, only the
+semiring/convexity/(intrinsic `ℝ≥0`-Pi) topological structure needed for `Adm`, `Equivalent`,
+and `FulkersonDual`. The companion coercion into `E → ℝ` (needed to bring in real-analysis
+machinery like Krein-Milman) lives in `LeanModulus.Common.ToReal`; anything that actually needs
+that coercion belongs there instead of here.
 -/
 
 open scoped NNReal
@@ -72,6 +76,13 @@ length at least `1` with respect to `ρ`. -/
 def IsAdmissible (ρ : Density E) (Γ : FamilyOfObjects E) : Prop :=
   ∀ γ ∈ Γ, 1 ≤ ρ.length γ
 
+/-- The length function is continuous (in the topology of densities). -/
+theorem continuous_length (γ : E → ℝ≥0) :
+    Continuous (fun ρ : Density E => ρ.length γ) := by
+  have hE : Fintype E := Fintype.ofFinite E
+  simp only [length, finsum_eq_sum_of_fintype]
+  exact continuous_finsetSum _ fun e _ => continuous_const.mul (continuous_apply e)
+
 end Density
 
 namespace FamilyOfObjects
@@ -99,6 +110,14 @@ theorem convex_adm (Γ : FamilyOfObjects E) : Convex ℝ≥0 Γ.Adm := by
   rw [mul_one] at h₂'
   rw [←hsum]
   exact add_le_add h₁' h₂'
+
+/-- The admissible set `Adm(Γ)`of a family `Γ` is closed. -/
+theorem isClosed_adm (Γ : FamilyOfObjects E) : IsClosed Γ.Adm := by
+  have hAdm : Γ.Adm = ⋂ γ ∈ Γ, {ρ | 1 ≤ ρ.length γ} := by
+    ext ρ
+    simp [Adm, Density.IsAdmissible]
+  rw [hAdm]
+  exact isClosed_biInter fun γ _ => IsClosed.preimage (Density.continuous_length γ) (isClosed_Ici)
 
 /-- Two families of objects are *equivalent* if they have the same admissible
 set, i.e. they impose exactly the same constraints on densities. This avoids

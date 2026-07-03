@@ -8,11 +8,14 @@ import Mathlib.Topology.Instances.NNReal.Lemmas
 # The `ℝ≥0` → `ℝ` bridge for densities
 
 The bridge from `Density E := E → ℝ≥0` (see `LeanModulus.Common.FamilyOfObjects`) into `E → ℝ`,
-via the coercion `Density.toReal`. Real-analysis tools (compactness, closed embeddings,
-Krein-Milman) aren't available directly over `ℝ≥0`, so this file collects both the algebra of
-`toReal` (additivity, scalar multiples, convex/openSegment structure) and the topological facts
-about it (closed embedding, closedness/convexity of `toReal '' Γ.Adm`) needed to move the
-duality argument into a locally convex TVS over `ℝ`.
+via the coercion `Density.toReal`. Real-analysis tools (compactness, Krein-Milman) aren't
+available directly over `ℝ≥0`, so this file collects the algebra of `toReal` (additivity, scalar
+multiples), the fact that it's a closed embedding, and the consequences for `Γ.Adm`'s image
+(convexity, closedness, nonemptiness) needed to move the duality argument into a locally convex
+TVS over `ℝ`.
+
+Everything here genuinely needs `toReal`; facts about `Density E`/`Γ.Adm` that don't mention it
+(e.g. their intrinsic `ℝ≥0`-side topology) belong in `LeanModulus.Common.FamilyOfObjects` instead.
 -/
 
 open scoped NNReal
@@ -20,13 +23,6 @@ open scoped NNReal
 namespace Density
 
 variable {E : Type*} [Finite E]
-
-/-- The length function is continuous (in the topology of densities). -/
-theorem continuous_length (γ : E → ℝ≥0) :
-    Continuous (fun ρ : Density E => ρ.length γ) := by
-  have hE : Fintype E := Fintype.ofFinite E
-  simp only [length, finsum_eq_sum_of_fintype]
-  exact continuous_finsetSum _ fun e _ => continuous_const.mul (continuous_apply e)
 
 /-- The coercion of a density `E → ℝ≥0` into a real-valued function `E → ℝ`. -/
 def toReal (ρ : Density E) : E → ℝ := fun e => (ρ e : ℝ)
@@ -77,14 +73,6 @@ theorem convex_toReal_image_adm : Convex ℝ (Density.toReal '' Γ.Adm) := by
     exact Γ.convex_adm hρ₁ hρ₂ zero_le zero_le hsum'
   · rw [Density.toReal_add, Density.toReal_smul, Density.toReal_smul]
     simp_all only [Real.coe_toNNReal', sup_of_le_left, ρ]
-
-/-- The admissible set `Adm(Γ)`of a family `Γ` is closed. -/
-theorem isClosed_adm (Γ : FamilyOfObjects E) : IsClosed Γ.Adm := by
-  have hAdm : Γ.Adm = ⋂ γ ∈ Γ, {ρ | 1 ≤ ρ.length γ} := by
-    ext ρ
-    simp [Adm, Density.IsAdmissible]
-  rw [hAdm]
-  exact isClosed_biInter fun γ _ => IsClosed.preimage (Density.continuous_length γ) (isClosed_Ici)
 
 /-- The image of `Γ.Adm` under `toReal` is closed. -/
 theorem isClosed_toReal_image_adm : IsClosed (Density.toReal '' Γ.Adm) := by
