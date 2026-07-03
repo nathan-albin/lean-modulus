@@ -1,5 +1,6 @@
 import LeanModulus.Common.FamilyOfObjects
 import Mathlib.Analysis.Convex.Basic
+import Mathlib.Order.Defs.LinearOrder
 import Mathlib.Topology.Constructions
 import Mathlib.Topology.Defs.Induced
 import Mathlib.Topology.Instances.NNReal.Lemmas
@@ -47,6 +48,33 @@ theorem isClosedEmbedding_toReal {E : Type*} : Topology.IsClosedEmbedding (Densi
   have h : (Density.toReal : Density E → (E → ℝ)) = Pi.map (fun _ : E => NNReal.toReal) := rfl
   rw [h]
   exact Topology.IsClosedEmbedding.piMap fun _ => NNReal.isClosedEmbedding_coe
+
+/-- The image of an open segment under `toReal` is an open segment. -/
+theorem toReal_image_openSegment {E : Type*} (ρ₁ ρ₂ : Density E) :
+    Density.toReal '' (openSegment ℝ≥0 ρ₁ ρ₂) = openSegment ℝ ρ₁.toReal ρ₂.toReal := by
+  ext x
+  constructor
+  · intro hx
+    obtain ⟨ρ, hρ, rfl⟩ := hx
+    obtain ⟨a, b, ha, hb, hab, hlin⟩  := hρ
+    have hab' : a.toReal + b.toReal = 1 := by norm_cast
+    have hlin' : a.toReal • ρ₁.toReal + b.toReal • ρ₂.toReal = ρ.toReal := by
+      rw [←hlin]
+      rfl
+    refine ⟨a.toReal, b.toReal, ha, hb, hab', hlin' ⟩
+  · intro hx
+    obtain ⟨a, b, ha, hb, hab, hlin⟩ := hx
+    set ρ := a.toNNReal • ρ₁ + b.toNNReal • ρ₂ with hρ
+    have ha' : 0 < a.toNNReal := Real.toNNReal_pos.mpr ha
+    have hb' : 0 < b.toNNReal := Real.toNNReal_pos.mpr hb
+    have hab' : a.toNNReal + b.toNNReal = 1 := by
+      rw [←Real.toNNReal_add ha.le hb.le, hab, Real.toNNReal_one]
+    refine ⟨ρ, ?_, ?_⟩
+    · refine ⟨ a.toNNReal, b.toNNReal, ha', hb', hab', ?_ ⟩
+      exact (add_left_inj (b.toNNReal • ρ₂)).mpr rfl
+    · rw [hρ, toReal_add, toReal_smul, toReal_smul]
+      subst hlin
+      rw [Real.coe_toNNReal a ha.le, Real.coe_toNNReal b hb.le]
 
 end Density
 
