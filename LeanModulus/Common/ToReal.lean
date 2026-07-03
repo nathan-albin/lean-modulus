@@ -33,15 +33,14 @@ sum of the lengths. -/
 theorem toReal_add {E : Type*} (ρ₁ ρ₂ : Density E) :
     (ρ₁ + ρ₂).toReal = ρ₁.toReal + ρ₂.toReal := by
   funext e
-  simp only [Density.toReal, Pi.add_apply, NNReal.coe_add]
+  simp [Density.toReal]
 
 /-- The length with respect to a scalar multiple of a density is
 the scalar multiple of the length. -/
 theorem toReal_smul {E : Type*} (c : ℝ≥0) (ρ : Density E) :
     (c • ρ).toReal = (c : ℝ) • ρ.toReal := by
   funext e
-  simp only [Density.toReal, Pi.smul_apply]
-  exact Real.ext_cauchy rfl
+  simp [Density.toReal]
 
 /-- The coercion of a density `E → ℝ≥0` into a real-valued function `E → ℝ` is a closed embedding. -/
 theorem isClosedEmbedding_toReal {E : Type*} : Topology.IsClosedEmbedding (Density.toReal : Density E → (E → ℝ)) := by
@@ -59,8 +58,7 @@ theorem toReal_image_openSegment {E : Type*} (ρ₁ ρ₂ : Density E) :
     obtain ⟨a, b, ha, hb, hab, hlin⟩  := hρ
     have hab' : a.toReal + b.toReal = 1 := by norm_cast
     have hlin' : a.toReal • ρ₁.toReal + b.toReal • ρ₂.toReal = ρ.toReal := by
-      rw [←hlin]
-      rfl
+      rw [←toReal_smul, ←toReal_smul, ←toReal_add, hlin]
     refine ⟨a.toReal, b.toReal, ha, hb, hab', hlin' ⟩
   · intro hx
     obtain ⟨a, b, ha, hb, hab, hlin⟩ := hx
@@ -94,19 +92,15 @@ theorem convex_toReal_image_adm : Convex ℝ (Density.toReal '' Γ.Adm) := by
   set ρ := θ₁.toNNReal • ρ₁ + θ₂.toNNReal • ρ₂ with hρ
   refine ⟨ρ, ?_, ?_⟩
   · have hsum' : θ₁.toNNReal + θ₂.toNNReal = 1 := by
-      rw [←Real.toNNReal_add, hsum, Real.toNNReal_one]
-      exact hθ₁
-      exact hθ₂
+      rw [←Real.toNNReal_add hθ₁ hθ₂, hsum, Real.toNNReal_one]
     rw [hρ]
     exact Γ.convex_adm hρ₁ hρ₂ zero_le zero_le hsum'
   · rw [Density.toReal_add, Density.toReal_smul, Density.toReal_smul]
     simp_all only [Real.coe_toNNReal', sup_of_le_left, ρ]
 
 /-- The image of `Γ.Adm` under `toReal` is closed. -/
-theorem isClosed_toReal_image_adm : IsClosed (Density.toReal '' Γ.Adm) := by
-  have hToReal : IsClosedMap (Density.toReal : Density E → (E →ℝ)) := by
-    exact (Density.isClosedEmbedding_toReal : Topology.IsClosedEmbedding (Density.toReal : Density E → (E → ℝ))).isClosedMap
-  exact hToReal Γ.Adm (isClosed_adm Γ)
+theorem isClosed_toReal_image_adm : IsClosed (Density.toReal '' Γ.Adm) :=
+ Density.isClosedEmbedding_toReal.isClosedMap Γ.Adm (isClosed_adm Γ)
 
 /-- The image of `Γ.Adm` under `toReal` is nonempty whenever `Γ.Adm` is nonempty. -/
 theorem nonempty_toReal_image_adm {E : Type*} (Γ : FamilyOfObjects E) (h : Γ.Adm.Nonempty) :
