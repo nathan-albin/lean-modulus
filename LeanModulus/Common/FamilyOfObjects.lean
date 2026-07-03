@@ -1,8 +1,18 @@
--- Families of objects (Section 1.5 of the FEU paper): a common framework for
--- spanning trees, paths, cuts, etc., each identified with its usage vector.
 import Mathlib.Algebra.BigOperators.Finprod
 import Mathlib.Analysis.Convex.Extreme
 import Mathlib.Data.NNReal.Basic
+
+/-!
+# Families of objects
+
+Families of objects (Section 1.5 of the FEU paper): a common framework for spanning trees,
+paths, cuts, etc., each identified with its usage vector.
+
+Everything here is stated over `ℝ≥0`: `Density E := E → ℝ≥0` has no subtraction and no
+topology, only the semiring/convexity structure needed for `Adm`, `Equivalent`, and
+`FulkersonDual`. The companion coercion into `E → ℝ` (needed to bring in real-analysis
+machinery like Krein-Milman) lives in `LeanModulus.Common.ToReal`.
+-/
 
 open scoped NNReal
 

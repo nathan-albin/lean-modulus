@@ -1,10 +1,19 @@
--- Topological facts about the admissible set of a family of objects.
 import LeanModulus.Common.FamilyOfObjects
 import Mathlib.Analysis.Convex.Basic
 import Mathlib.Topology.Constructions
 import Mathlib.Topology.Defs.Induced
 import Mathlib.Topology.Instances.NNReal.Lemmas
 
+/-!
+# The `ℝ≥0` → `ℝ` bridge for densities
+
+The bridge from `Density E := E → ℝ≥0` (see `LeanModulus.Common.FamilyOfObjects`) into `E → ℝ`,
+via the coercion `Density.toReal`. Real-analysis tools (compactness, closed embeddings,
+Krein-Milman) aren't available directly over `ℝ≥0`, so this file collects both the algebra of
+`toReal` (additivity, scalar multiples, convex/openSegment structure) and the topological facts
+about it (closed embedding, closedness/convexity of `toReal '' Γ.Adm`) needed to move the
+duality argument into a locally convex TVS over `ℝ`.
+-/
 
 open scoped NNReal
 

@@ -1,10 +1,14 @@
--- The cycle (graphic) matroid of a finite multigraph: the matroid on the edge
--- set whose independent sets are exactly the forests. See
--- `docs/fairest-edge-usage.md` for why this connection matters: the paper's
--- spanning-tree results are really matroid facts, so we route through
--- `Matroid.IsBase` rather than reproving them directly.
 import LeanModulus.Common.Multigraph
 import Mathlib.Combinatorics.Matroid.IndepAxioms
+
+/-!
+# The graphic matroid
+
+The cycle (graphic) matroid of a finite multigraph: the matroid on the edge set whose
+independent sets are exactly the forests. See `docs/fairest-edge-usage.md` for why this
+connection matters: the paper's spanning-tree results are really matroid facts, so we route
+through `Matroid.IsBase` rather than reproving them directly.
+-/
 
 namespace Multigraph
 

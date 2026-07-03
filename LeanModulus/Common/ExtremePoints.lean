@@ -1,10 +1,15 @@
--- Convex-analysis facts supplementing Mathlib's extreme-point / Krein-Milman API, built
--- towards: the infimum of a linear functional over a closed convex set is attained at an
--- extreme point of the set, given a known compact sublevel set.
 import Mathlib.Analysis.Convex.Exposed
 import Mathlib.Analysis.Convex.KreinMilman
 import Mathlib.Topology.Order.Compact
 import Mathlib.Topology.Instances.Real.Lemmas
+
+/-!
+# Extreme points of sublevel-compact sets
+
+Convex-analysis facts supplementing Mathlib's extreme-point / Krein-Milman API, built towards:
+the infimum of a linear functional over a closed convex set is attained at an extreme point of
+the set, given a known compact sublevel set.
+-/
 
 /-- If `l` is continuous on `s` and has a compact sublevel set `{y ∈ s | l y ≤ l x₀}` at some
 `x₀ ∈ s`, then `l` attains its minimum over all of `s`. -/

@@ -1,10 +1,15 @@
--- Shared graph-theoretic infrastructure reused across papers (e.g. multigraphs,
--- usage matrices) that isn't already in Mathlib. Mathlib's `SimpleGraph` doesn't
--- allow parallel edges or loops, so multigraphs need their own structure.
 import Mathlib.Combinatorics.SimpleGraph.Acyclic
 import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
 import Mathlib.Data.Set.Card
 import LeanModulus.Common.SimpleGraph
+
+/-!
+# Multigraphs
+
+Shared graph-theoretic infrastructure reused across papers (e.g. multigraphs, usage matrices)
+that isn't already in Mathlib. Mathlib's `SimpleGraph` doesn't allow parallel edges or loops, so
+multigraphs need their own structure.
+-/
 
 /-- A multigraph on vertex type `V` with edge type `E`: edges are first-class
 objects (so parallel edges are distinct elements of `E`), each mapped to its

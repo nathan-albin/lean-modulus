@@ -1,5 +1,10 @@
--- General `SimpleGraph` facts that supplement Mathlib but aren't already there.
 import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
+
+/-!
+# `SimpleGraph` facts
+
+General `SimpleGraph` facts that supplement Mathlib but aren't already there.
+-/
 
 namespace SimpleGraph
 

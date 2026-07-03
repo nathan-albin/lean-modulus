@@ -1,1 +1,5 @@
--- placeholder for modulus code to come
+/-!
+# Modulus
+
+Placeholder for modulus code to come.
+-/
