@@ -96,7 +96,6 @@ def Adm (Γ : FamilyOfObjects E) : Set (Density E) :=
 
 /-- The admissible set `Adm(Γ)`of a family `Γ` is convex. -/
 theorem convex_adm (Γ : FamilyOfObjects E) : Convex ℝ≥0 Γ.Adm := by
-  rw [Convex]
   intro ρ₁ hρ₁
   rw [StarConvex]
   intro ρ₂ hρ₂ θ₁ θ₂ hθ₁ hθ₂ hsum
