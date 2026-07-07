@@ -1,10 +1,21 @@
 # lean-modulus
 
-Formalizations, in [Lean 4](https://lean-lang.org/) and [Mathlib](https://leanprover-community.github.io/mathlib4_docs/),
-of results from my research on graphs, networks, and the modulus of families of objects.
+This repo contains [Lean
+4](https://lean-lang.org/)/[Mathlib](https://github.com/leanprover-community/mathlib4)
+formalization of some of my research on graphs, networks, and the modulus of
+families of objects. A brief introduction to modulus and some associated code
+can be found in my
+[discrete-modulus](https://github.com/nathan-albin/discrete-modulus) repo.
 
-This is a working project. results are added incrementally, and the
-[blueprint](#blueprint) tracks what's genuinely proved versus proved with `sorry`.
+You can also find a more complete coverage of the theory in my book with Pietro
+Poggi-Corradini:
+
+> Albin, N., & Poggi-Corradini, P. (2025). *Mathematics of Networks: Modulus
+> Theory and Convex Optimization (1st ed.)*. Chapman and Hall/CRC.
+> [https://doi.org/10.1201/9781003024866](https://doi.org/10.1201/9781003024866)
+
+This is a working project. Results and the upcoming plan are tracked in the
+[blueprint](#blueprint), tracks what's defined, stated, and proved.
 
 ## Papers
 
