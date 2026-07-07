@@ -99,8 +99,8 @@ theorem convex_toReal_image_adm : Convex ℝ (Density.toReal '' Γ.Adm) := by
       rw [←Real.toNNReal_add hθ₁ hθ₂, hsum, Real.toNNReal_one]
     rw [hρ]
     exact Γ.convex_adm hρ₁ hρ₂ zero_le zero_le hsum'
-  · rw [Density.toReal_add, Density.toReal_smul, Density.toReal_smul]
-    simp_all only [Real.coe_toNNReal', sup_of_le_left, ρ]
+  · rw [Density.toReal_add, Density.toReal_smul, Density.toReal_smul,
+      Real.coe_toNNReal θ₁ hθ₁, Real.coe_toNNReal θ₂ hθ₂]
 
 /-- The image of `Γ.Adm` under `toReal` is closed. -/
 theorem isClosed_toReal_image_adm : IsClosed (Density.toReal '' Γ.Adm) :=

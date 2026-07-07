@@ -57,7 +57,7 @@ sum of the lengths. -/
 theorem length_add (ρ₁ ρ₂ : Density E) (γ : E → ℝ≥0) :
     (ρ₁ + ρ₂).length γ = ρ₁.length γ + ρ₂.length γ := by
   rw [length, length, length]
-  simp_all only [Pi.add_apply]
+  simp only [Pi.add_apply]
   ring_nf
   exact finsum_add_distrib (Set.toFinite _) (Set.toFinite _)
 
@@ -67,7 +67,7 @@ the scalar multiple of the length. -/
 theorem length_smul (ρ : Density E) (c : ℝ≥0) (γ : E → ℝ≥0) :
     (c • ρ).length γ = c * ρ.length γ := by
   rw [length, length]
-  simp_all only [Pi.smul_apply]
+  simp only [Pi.smul_apply]
   ring_nf
   rw [←finsum_mul]
   ring

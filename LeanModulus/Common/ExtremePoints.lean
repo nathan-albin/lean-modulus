@@ -55,20 +55,17 @@ theorem isCompact_setOf_isMinOn
   suffices h : {y ∈ s | IsMinOn l s y} = {y ∈ s | l y ≤ l x₀} ∩ l ⁻¹' {l xStar} by
     exact h ▸ hK.inter_right (isClosed_singleton.preimage l.continuous)
   ext x
-  apply Iff.intro
-  simp [isMinOn_iff]
-  · intro a
-    simp_all only [and_self, true_and]
-    intro hmin
-    have hxle := hmin xStar hxStars
-    exact le_antisymm hxle (isMinOn_iff.mp hxStarMin x a)
-  · intro a
-    simp_all only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_singleton_iff, true_and]
-    obtain ⟨left, right⟩ := a
-    obtain ⟨left, right_1⟩ := left
-    simp_all only
-    rw [isMinOn_iff, right, ←isMinOn_iff]
-    exact IsMaxOn.undual hxStarMin
+  constructor
+  · simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage, Set.mem_singleton_iff,
+      isMinOn_iff]
+    rintro ⟨hx, hmin⟩
+    have hxle : l x ≤ l xStar := hmin xStar hxStars
+    have hstarle : l xStar ≤ l x₀ := isMinOn_iff.mp hxStarMin x₀ hx₀
+    exact ⟨⟨hx, hxle.trans hstarle⟩, le_antisymm hxle (isMinOn_iff.mp hxStarMin x hx)⟩
+  · rintro ⟨⟨hx, -⟩, hxeq⟩
+    refine ⟨hx, isMinOn_iff.2 fun y hy => ?_⟩
+    rw [hxeq]
+    exact isMinOn_iff.mp hxStarMin y hy
 
 /-- **Layer 1 capstone**: In an LCTVS, if `l` is a continuous linear functional on a set `s`
 with a compact sublevel set at some `x₀ ∈ s`, then the minimum of `l` over `s` is attained at
