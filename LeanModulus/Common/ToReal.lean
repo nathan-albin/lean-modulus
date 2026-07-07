@@ -28,28 +28,32 @@ variable {E : Type*} [Finite E]
 /-- The coercion of a density `E → ℝ≥0` into a real-valued function `E → ℝ`. -/
 def toReal (ρ : Density E) : E → ℝ := fun e => (ρ e : ℝ)
 
+omit [Finite E] in
 /-- The length with respect to the sum of two densities is the
 sum of the lengths. -/
-theorem toReal_add {E : Type*} (ρ₁ ρ₂ : Density E) :
+theorem toReal_add (ρ₁ ρ₂ : Density E) :
     (ρ₁ + ρ₂).toReal = ρ₁.toReal + ρ₂.toReal := by
   funext e
   simp [Density.toReal]
 
+omit [Finite E] in
 /-- The length with respect to a scalar multiple of a density is
 the scalar multiple of the length. -/
-theorem toReal_smul {E : Type*} (c : ℝ≥0) (ρ : Density E) :
+theorem toReal_smul (c : ℝ≥0) (ρ : Density E) :
     (c • ρ).toReal = (c : ℝ) • ρ.toReal := by
   funext e
   simp [Density.toReal]
 
+omit [Finite E] in
 /-- The coercion of a density `E → ℝ≥0` into a real-valued function `E → ℝ` is a closed embedding. -/
-theorem isClosedEmbedding_toReal {E : Type*} : Topology.IsClosedEmbedding (Density.toReal : Density E → (E → ℝ)) := by
+theorem isClosedEmbedding_toReal : Topology.IsClosedEmbedding (Density.toReal : Density E → (E → ℝ)) := by
   have h : (Density.toReal : Density E → (E → ℝ)) = Pi.map (fun _ : E => NNReal.toReal) := rfl
   rw [h]
   exact Topology.IsClosedEmbedding.piMap fun _ => NNReal.isClosedEmbedding_coe
 
+omit [Finite E] in
 /-- The image of an open segment under `toReal` is an open segment. -/
-theorem toReal_image_openSegment {E : Type*} (ρ₁ ρ₂ : Density E) :
+theorem toReal_image_openSegment (ρ₁ ρ₂ : Density E) :
     Density.toReal '' (openSegment ℝ≥0 ρ₁ ρ₂) = openSegment ℝ ρ₁.toReal ρ₂.toReal := by
   ext x
   constructor
@@ -102,8 +106,9 @@ theorem convex_toReal_image_adm : Convex ℝ (Density.toReal '' Γ.Adm) := by
 theorem isClosed_toReal_image_adm : IsClosed (Density.toReal '' Γ.Adm) :=
  Density.isClosedEmbedding_toReal.isClosedMap Γ.Adm (isClosed_adm Γ)
 
+omit [Finite E] in
 /-- The image of `Γ.Adm` under `toReal` is nonempty whenever `Γ.Adm` is nonempty. -/
-theorem nonempty_toReal_image_adm {E : Type*} (Γ : FamilyOfObjects E) (h : Γ.Adm.Nonempty) :
+theorem nonempty_toReal_image_adm (Γ : FamilyOfObjects E) (h : Γ.Adm.Nonempty) :
     (Density.toReal '' Γ.Adm).Nonempty := h.image _
 
 end FamilyOfObjects

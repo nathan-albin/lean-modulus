@@ -61,9 +61,10 @@ theorem length_add (ρ₁ ρ₂ : Density E) (γ : E → ℝ≥0) :
   ring_nf
   exact finsum_add_distrib (Set.toFinite _) (Set.toFinite _)
 
+omit [Finite E] in
 /-- The length with respect to a scalar multiple of a density is
 the scalar multiple of the length. -/
-theorem length_smul {E : Type*} (ρ : Density E) (c : ℝ≥0) (γ : E → ℝ≥0) :
+theorem length_smul (ρ : Density E) (c : ℝ≥0) (γ : E → ℝ≥0) :
     (c • ρ).length γ = c * ρ.length γ := by
   rw [length, length]
   simp_all only [Pi.smul_apply]
