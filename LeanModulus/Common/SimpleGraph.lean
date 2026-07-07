@@ -19,7 +19,7 @@ theorem reachable_le_of_adj_le {R : V → V → Prop} (hRefl : ∀ x, R x x)
   rw [reachable_iff_reflTransGen] at h
   induction h with
   | refl => exact hRefl x
-  | tail _ hadj ih =>
-    (expose_names; exact (hTrans x b c ih ∘ hAdj b c) hadj)
+  | @tail a b hxa hab ih =>
+    exact (hTrans x a b ih ∘ hAdj a b) hab
 
 end SimpleGraph
