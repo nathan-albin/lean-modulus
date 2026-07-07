@@ -25,6 +25,22 @@ This is a working project. Results and the upcoming plan are tracked in the
 
 More papers will be added here as they're formalized.
 
+## Shared infrastructure
+
+Building toward the goals of the papers, the following shared infrastructure is
+formalized in the `Common` folder:
+
+- **Multigraphs** — forests, spanning trees, connected components
+  ([`Multigraph.lean`](LeanModulus/Common/Multigraph.lean))
+- **Graphic matroid** — forests as the independent sets of the cycle matroid
+  ([`GraphicMatroid.lean`](LeanModulus/Common/GraphicMatroid.lean))
+- **Modulus / families of objects** — densities, admissible sets, Fulkerson duals
+  ([`FamilyOfObjects.lean`](LeanModulus/Common/FamilyOfObjects.lean),
+  [`ToReal.lean`](LeanModulus/Common/ToReal.lean))
+- **Convex analysis for duality** — extreme points, Krein-Milman-adjacent lemmas
+  ([`ExtremePoints.lean`](LeanModulus/Common/ExtremePoints.lean))
+- **`SimpleGraph` connectivity facts** ([`SimpleGraph.lean`](LeanModulus/Common/SimpleGraph.lean))
+
 ## Repository layout
 
 ```
