@@ -46,12 +46,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # because the prebuilt gem/bundle wrapper scripts hardcode that path in their
 # shebang line and won't run from anywhere else. The -dev headers are a
 # fallback for native gems (e.g. nokogiri) on platforms with no precompiled
-# binary, where bundler falls back to compiling from source.
+# binary, where bundler falls back to compiling from source. libyaml-dev is
+# different: it's not a gem fallback but a runtime dependency of the prebuilt
+# Ruby's own bundled psych (YAML) extension -- without it, `require 'psych'`
+# fails with a libyaml-0.so.2 LoadError before bundler can even parse the
+# Gemfile.lock, so trixie's base image (which lacks libyaml) breaks every
+# `bundle` invocation.
 RUN apt-get update && apt-get install -y --no-install-recommends \
         zlib1g-dev \
         libxml2-dev \
         libxslt1-dev \
         libssl-dev \
+        libyaml-dev \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /opt/hostedtoolcache/Ruby/3.1.7 \
     && curl -sL https://github.com/ruby/ruby-builder/releases/download/toolcache/ruby-3.1.7-ubuntu-24.04.tar.gz \
