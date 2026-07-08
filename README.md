@@ -1,6 +1,6 @@
 # lean-modulus
 
-This repo contains [Lean
+[Lean
 4](https://lean-lang.org/)/[Mathlib](https://github.com/leanprover-community/mathlib4)
 formalization of some of my research on graphs, networks, and the modulus of
 families of objects. A brief introduction to modulus and some associated code
