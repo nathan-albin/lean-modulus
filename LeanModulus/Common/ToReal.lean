@@ -52,6 +52,11 @@ theorem isClosedEmbedding_toReal : Topology.IsClosedEmbedding (Density.toReal : 
   exact Topology.IsClosedEmbedding.piMap fun _ => NNReal.isClosedEmbedding_coe
 
 omit [Finite E] in
+/-- The coercion of a density `E → ℝ≥0` into a real-valued function `E → ℝ` is injective. -/
+theorem toReal_injective : Function.Injective (Density.toReal : Density E → (E → ℝ)) :=
+  isClosedEmbedding_toReal.injective
+
+omit [Finite E] in
 /-- The image of an open segment under `toReal` is an open segment. -/
 theorem toReal_image_openSegment (ρ₁ ρ₂ : Density E) :
     Density.toReal '' (openSegment ℝ≥0 ρ₁ ρ₂) = openSegment ℝ ρ₁.toReal ρ₂.toReal := by
@@ -110,5 +115,56 @@ omit [Finite E] in
 /-- The image of `Γ.Adm` under `toReal` is nonempty whenever `Γ.Adm` is nonempty. -/
 theorem nonempty_toReal_image_adm (Γ : FamilyOfObjects E) (h : Γ.Adm.Nonempty) :
     (Density.toReal '' Γ.Adm).Nonempty := h.image _
+
+omit [Finite E] in
+/-- A point in `Γ.FulkersonDual` is an extreme point of the image of `Γ.Adm` under `toReal`. -/
+theorem toReal_mem_extremePoints_of_mem_fulkersonDual
+  (ρ : Density E) (hρ : ρ ∈ Γ.FulkersonDual) :
+  Density.toReal ρ ∈ (Density.toReal '' Γ.Adm).extremePoints ℝ := by
+  rw [mem_extremePoints]
+  refine ⟨Set.mem_image_of_mem Density.toReal hρ.1, ?_⟩
+  rintro ρ₁ hρ₁ ρ₂ hρ₂ hlin
+  obtain ⟨ρ₁', hρ₁Adm, hρ₁', rfl⟩ := hρ₁
+  obtain ⟨ρ₂', hρ₂Adm, hρ₂', rfl⟩ := hρ₂
+  rw [FulkersonDual] at hρ
+  rw [←Density.toReal_image_openSegment] at hlin
+  have hlin' : ρ ∈ openSegment ℝ≥0 ρ₁' ρ₂' := by
+    rw [Set.mem_image] at hlin
+    obtain ⟨ρ', hρ', himgeq⟩ := hlin
+    have heq : ρ' = ρ := Density.toReal_injective himgeq
+    subst heq
+    exact hρ'
+  have heq : ρ₁' = ρ ∧ ρ₂' = ρ := (mem_extremePoints.mp hρ).2 ρ₁' hρ₁Adm ρ₂' hρ₂Adm hlin'
+  exact ⟨congrArg Density.toReal heq.1, congrArg Density.toReal heq.2⟩
+
+omit [Finite E] in
+/-- An extreme point of the image of `Γ.Adm` under `toReal` belongs to `Γ.FulkersonDual`. -/
+theorem mem_fulkersonDual_of_toReal_mem_extremePoints
+  (ρ : Density E)
+  (hρ : Density.toReal ρ ∈ (Density.toReal '' Γ.Adm).extremePoints ℝ) :
+  ρ ∈ Γ.FulkersonDual := by
+  have hρAdm := Density.toReal_injective.mem_set_image.mp (extremePoints_subset hρ)
+  rw [FulkersonDual, mem_extremePoints]
+  refine ⟨hρAdm, ?_⟩
+  rintro ρ₁ hρ₁ ρ₂ hρ₂ hlin
+  have hlin' : ρ.toReal ∈ openSegment ℝ ρ₁.toReal ρ₂.toReal := by
+    rw [←Density.toReal_image_openSegment]
+    apply Set.mem_image_of_mem
+    exact hlin
+  obtain ⟨h₁, h₂⟩ := (mem_extremePoints.mp hρ).2 ρ₁.toReal (Set.mem_image_of_mem _ hρ₁) ρ₂.toReal (Set.mem_image_of_mem _ hρ₂) hlin'
+  rw [Density.toReal_injective h₁, Density.toReal_injective h₂]
+  exact ⟨rfl, rfl⟩
+
+omit [Finite E] in
+/-- The image of `Γ.FulkersonDual` under `toReal` is the set of extreme points of the image of `Γ.Adm` under `toReal`. -/
+theorem toReal_image_fulkersonDual (Γ : FamilyOfObjects E) :
+  Density.toReal '' Γ.FulkersonDual = (Density.toReal '' Γ.Adm).extremePoints ℝ := by
+  ext ρ'
+  constructor
+  · rintro ⟨ρ, hρ, rfl⟩
+    exact toReal_mem_extremePoints_of_mem_fulkersonDual Γ ρ hρ
+  · intro hρ'
+    obtain ⟨ρ, hρ, rfl⟩ := extremePoints_subset hρ'
+    exact ⟨ρ, mem_fulkersonDual_of_toReal_mem_extremePoints Γ ρ hρ', rfl⟩
 
 end FamilyOfObjects
