@@ -3,6 +3,7 @@ import LeanModulus.Common.ExtremePoints
 import LeanModulus.Common.FamilyOfObjects
 import LeanModulus.Common.GraphicMatroid
 import LeanModulus.Common.Multigraph
+import LeanModulus.Common.Pairing
 import LeanModulus.Common.SimpleGraph
 import LeanModulus.Common.ToReal
 import LeanModulus.Papers.FairestEdgeUsage.Defs

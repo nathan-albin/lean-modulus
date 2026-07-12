@@ -29,6 +29,13 @@ variable {E : Type*} [Finite E]
 def toReal (ρ : Density E) : E → ℝ := fun e => (ρ e : ℝ)
 
 omit [Finite E] in
+/-- The coercion of a density to a real-valued function is nonnegative. -/
+theorem toReal_nonneg (ρ : Density E) : 0 ≤ ρ.toReal := by
+  intro e
+  rw [Pi.zero_apply]
+  apply NNReal.coe_nonneg
+
+omit [Finite E] in
 /-- The length with respect to the sum of two densities is the
 sum of the lengths. -/
 theorem toReal_add (ρ₁ ρ₂ : Density E) :
