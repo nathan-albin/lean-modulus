@@ -1,5 +1,6 @@
 import LeanModulus.Basic
 import LeanModulus.Common.Duality
+import LeanModulus.Common.Energy
 import LeanModulus.Common.ExtremePoints
 import LeanModulus.Common.FamilyOfObjects
 import LeanModulus.Common.GraphicMatroid
