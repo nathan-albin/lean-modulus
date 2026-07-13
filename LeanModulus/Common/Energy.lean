@@ -1,5 +1,5 @@
 import LeanModulus.Common.ExtremePoints
-import LeanModulus.Common.ToReal
+import LeanModulus.Common.Pairing
 
 /-!
 # The 2-energy of a density
@@ -43,6 +43,30 @@ theorem energyReal_toReal (σ : E → ℝ≥0) (ρ : Density E) :
 /-- The real 2-energy is continuous. -/
 theorem continuous_energyReal (σ : E → ℝ≥0) : Continuous (energyReal σ) :=
   continuous_finsetSum _ fun e _ => continuous_const.mul ((continuous_apply e).pow 2)
+
+/-- The real 2-energy is nonnegative. -/
+theorem energyReal_nonneg (σ : E → ℝ≥0) (f : E → ℝ) : 0 ≤ energyReal σ f :=
+  Finset.sum_nonneg fun e _ => mul_nonneg (σ e).coe_nonneg (sq_nonneg _)
+
+omit [Fintype E] in
+/-- The 2-energy of a density is its length against the reweighted density `σ * ρ`. -/
+theorem length_mul_eq_energy (σ : E → ℝ≥0) (ρ : Density E) :
+    Density.length (σ * ρ) ρ = energy σ ρ := by
+  rw [Density.length, energy]
+  exact finsum_congr fun e => by rw [Pi.mul_apply]; ring
+
+/-- First-variation expansion of the real 2-energy at the coercion of a density `ρ`:
+moving by `t • f` changes the energy by a linear term, the pairing against the reweighted
+density `σ * ρ`, plus a quadratic remainder. -/
+theorem energyReal_add_smul (σ : E → ℝ≥0) (ρ : Density E) (f : E → ℝ) (t : ℝ) :
+    energyReal σ (ρ.toReal + t • f)
+      = energyReal σ ρ.toReal + 2 * t * pairing (σ * ρ) f + t ^ 2 * energyReal σ f := by
+  simp only [energyReal_apply, pairing_apply]
+  rw [Finset.mul_sum, Finset.mul_sum, ← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+  refine Finset.sum_congr rfl fun e _ => ?_
+  simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul, Pi.mul_apply, NNReal.coe_mul,
+    Density.toReal]
+  ring
 
 /-- If a nonnegative function `f` has 2-energy at most `c` with respect to strictly positive
 edge weights `σ`, then each coordinate satisfies `f e ≤ √(c / σ e)`. This is the coercivity
@@ -146,5 +170,58 @@ theorem existsUnique_isMinOn_energy (σ : E → ℝ≥0) (hσ : ∀ e, 0 < σ e)
           ring
   rw [Density.energyReal_toReal] at hlt
   exact absurd (isMinOn_iff.mp hMin _ hmAdm) (not_le.mpr (by exact_mod_cast hlt))
+
+/-- **Variational inequality**: a minimizer `ρ*` of the 2-energy over the admissible set also
+minimizes the linear functional `γ ↦ (σ * ρ*).length γ` over the admissible set. Moving from
+`ρ*` towards any admissible `ρ` changes the energy at first order by the pairing term of
+`Density.energyReal_add_smul`, which must therefore be nonnegative. -/
+theorem isMinOn_length_mul_of_isMinOn_energy (σ : E → ℝ≥0) {ρs : Density E}
+    (hρs : ρs ∈ Γ.Adm) (hMin : IsMinOn (Density.energy σ) Γ.Adm ρs) :
+    IsMinOn (Density.length (σ * ρs)) Γ.Adm ρs := by
+  refine isMinOn_iff.2 fun ρ hρ => ?_
+  set d : E → ℝ := Density.toReal ρ - ρs.toReal with hd
+  set P : ℝ := Density.pairing (σ * ρs) d with hP
+  set Q : ℝ := Density.energyReal σ d with hQ
+  have hQ0 : 0 ≤ Q := Density.energyReal_nonneg σ d
+  -- moving from ρ* towards ρ by t cannot decrease the energy
+  have key : ∀ t : ℝ, 0 < t → t ≤ 1 → 0 ≤ 2 * t * P + t ^ 2 * Q := by
+    intro t ht ht1
+    set s : ℝ≥0 := t.toNNReal with hs
+    have hs1 : s ≤ 1 := by
+      rw [hs, ← Real.toNNReal_one]
+      exact Real.toNNReal_mono ht1
+    have hst : (s : ℝ) = t := Real.coe_toNNReal t ht.le
+    have hρt : (1 - s) • ρs + s • ρ ∈ Γ.Adm :=
+      Γ.convex_adm hρs hρ zero_le zero_le (tsub_add_cancel_of_le hs1)
+    have htoReal : ((1 - s) • ρs + s • ρ).toReal = ρs.toReal + t • d := by
+      funext e
+      have h1s : ((1 - s : ℝ≥0) : ℝ) = 1 - t := by
+        rw [NNReal.coe_sub hs1, hst, NNReal.coe_one]
+      simp only [Density.toReal, Pi.add_apply, Pi.smul_apply, smul_eq_mul, NNReal.coe_add,
+        NNReal.coe_mul, h1s, hst, hd, Pi.sub_apply]
+      ring
+    have h := isMinOn_iff.mp hMin _ hρt
+    have hR : Density.energyReal σ ρs.toReal
+        ≤ Density.energyReal σ (((1 - s) • ρs + s • ρ).toReal) := by
+      rw [Density.energyReal_toReal, Density.energyReal_toReal]
+      exact_mod_cast h
+    rw [htoReal, Density.energyReal_add_smul] at hR
+    linarith
+  -- let t → 0 to isolate the first-order term
+  have hP0 : 0 ≤ P := by
+    refine le_of_forall_pos_le_add fun ε hε => ?_
+    have hQ1 : (0 : ℝ) < Q + 1 := by linarith
+    set t : ℝ := min 1 (ε / (Q + 1)) with htdef
+    have ht : 0 < t := lt_min one_pos (div_pos hε hQ1)
+    have htQ : t * Q ≤ ε := by
+      calc t * Q ≤ ε / (Q + 1) * Q := mul_le_mul_of_nonneg_right (min_le_right _ _) hQ0
+        _ ≤ ε := by
+            rw [div_mul_eq_mul_div, div_le_iff₀ hQ1]
+            nlinarith
+    have hk := key t ht (min_le_left _ _)
+    nlinarith [mul_le_mul_of_nonneg_left htQ ht.le]
+  rw [hP, hd, map_sub, sub_nonneg, Density.pairing_toReal_eq_length,
+    Density.pairing_toReal_eq_length] at hP0
+  exact_mod_cast hP0
 
 end FamilyOfObjects
