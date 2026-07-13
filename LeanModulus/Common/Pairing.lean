@@ -33,6 +33,14 @@ theorem pairing_apply (η : Density E) (f : E → ℝ) :
     η.pairing f = ∑ e, f e * (η e : ℝ) := by
   simp [pairing, mul_comm]
 
+/-- Pairing `η` against the coercion of a density `ρ` computes the `ℝ≥0`-valued length
+`η.length ρ`, coerced to `ℝ`. This bridges the real-analysis side (`pairing`) back to the
+`ℝ≥0` admissibility language of `LeanModulus.Common.FamilyOfObjects`. -/
+theorem pairing_toReal_eq_length (η ρ : Density E) :
+    η.pairing ρ.toReal = (η.length ρ : ℝ) := by
+  rw [pairing_apply, length, finsum_eq_sum_of_fintype, NNReal.coe_sum]
+  simp [Density.toReal]
+
 /-- If a nonnegative function `f` pairs against a strictly positive density `η` to at most `c`,
 then each coordinate satisfies `f e ≤ c / η e`. This is the coercivity estimate that traps
 sublevel sets of the pairing in a compact box. -/
